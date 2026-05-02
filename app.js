@@ -252,12 +252,15 @@ function normalizeTopic(topic) {
 }
 
 function supabaseHeaders(extra = {}) {
-  return {
+  const headers = {
     apikey: supabaseConfig.publishableKey,
-    Authorization: `Bearer ${supabaseConfig.publishableKey}`,
     "Content-Type": "application/json",
     ...extra,
   };
+  if (!supabaseConfig.publishableKey.startsWith("sb_")) {
+    headers.Authorization = `Bearer ${supabaseConfig.publishableKey}`;
+  }
+  return headers;
 }
 
 async function supabaseRequest(path, options = {}) {
