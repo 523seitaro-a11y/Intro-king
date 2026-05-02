@@ -291,11 +291,9 @@ body.create-mode .topbar {
 }
 
 .feed-grid {
-  grid-auto-columns: 128px;
-  grid-auto-flow: column;
-  grid-template-columns: none;
-  column-gap: 56px;
-  row-gap: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
   overflow-x: auto;
   padding-bottom: 8px;
   scroll-padding-inline: 2px;
@@ -304,6 +302,7 @@ body.create-mode .topbar {
 
 .feed-grid .topic-card {
   grid-template-rows: 128px 40px 22px 26px;
+  flex: 0 0 128px;
   width: 128px;
   height: 232px;
   overflow: visible;
@@ -1941,9 +1940,7 @@ textarea {
   }
 
   .feed-grid {
-    grid-auto-columns: 128px;
-    grid-auto-flow: column;
-    grid-template-columns: none;
+    display: flex;
   }
 }
 
@@ -1995,9 +1992,7 @@ textarea {
   }
 
   .feed-grid {
-    grid-auto-columns: 128px;
-    grid-auto-flow: column;
-    grid-template-columns: none;
+    display: flex;
   }
 
   .timer {
