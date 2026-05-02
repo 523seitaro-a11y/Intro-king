@@ -510,7 +510,7 @@ textarea {
 
 .topic-thumb {
   width: 52px;
-  height: 42px;
+  height: 52px;
   border-radius: 6px;
   object-fit: cover;
 }
@@ -609,7 +609,7 @@ textarea {
   overflow: hidden;
   width: 100%;
   min-width: 0;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1;
   border: 0;
   border-radius: 6px;
   padding: 0;
@@ -641,7 +641,7 @@ textarea {
 
 .topic-image-placeholder.topic-thumb {
   width: 52px;
-  height: 42px;
+  height: 52px;
   border-radius: 6px;
 }
 
@@ -1069,7 +1069,7 @@ textarea {
 
 .topic-image-list img {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1;
   height: auto;
   border-radius: 4px;
   object-fit: cover;
@@ -1101,7 +1101,7 @@ textarea {
 
 .topic-image-picker-button img {
   width: 56px;
-  height: 40px;
+  height: 56px;
   border-radius: 4px;
   object-fit: cover;
 }
@@ -1309,14 +1309,14 @@ textarea {
 
 .mode-shell .genre-page-heading {
   display: grid;
-  grid-template-columns: 148px minmax(0, 1fr) auto;
+  grid-template-columns: 112px minmax(0, 1fr) auto;
   align-items: center;
 }
 
 .mode-topic-image {
   overflow: hidden;
-  width: 148px;
-  aspect-ratio: 16 / 10;
+  width: 112px;
+  aspect-ratio: 1;
   border-radius: 6px;
   background: var(--panel);
 }
