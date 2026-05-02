@@ -5,179 +5,7 @@ const gameModes = [
   { id: "all", label: "全問チャレンジ", questions: 999, description: "全曲" },
 ];
 
-const baseDefaultTopics = [
-  {
-    id: "sample-anime",
-    name: "アニソン定番",
-    genre: "アニソン",
-    description: "最初から遊べるサンプル。編集画面で自分のお題を作成できます。",
-    creator: "イントロキング",
-    createdAt: "2026-05-01T00:00:00.000Z",
-    baseLikes: 12,
-    likes: 12,
-    views: 148,
-    likedBy: [],
-    published: true,
-    seedQuery: "anime song",
-    tracks: [],
-  },
-  {
-    id: "sample-jpop",
-    name: "J-POPヒット",
-    genre: "J-POP",
-    description: "人気J-POPのサンプルお題です。",
-    creator: "イントロキング",
-    createdAt: "2026-05-01T00:01:00.000Z",
-    baseLikes: 9,
-    likes: 9,
-    views: 126,
-    likedBy: [],
-    published: true,
-    seedQuery: "j-pop hits",
-    tracks: [],
-  },
-  {
-    id: "sample-rock",
-    name: "邦ロック入門",
-    genre: "ロック",
-    description: "邦ロック系のサンプルお題です。",
-    creator: "イントロキング",
-    createdAt: "2026-05-01T00:02:00.000Z",
-    baseLikes: 7,
-    likes: 7,
-    views: 103,
-    likedBy: [],
-    published: true,
-    seedQuery: "japanese rock",
-    tracks: [],
-  },
-];
-
-function createDefaultTopics() {
-  const topicSeeds = [
-    ["アニソン", "鬼滅の刃 主題歌", "鬼滅の刃 主題歌"],
-    ["アニソン", "呪術廻戦 主題歌", "呪術廻戦 主題歌"],
-    ["アニソン", "SPY×FAMILY 主題歌", "SPY FAMILY 主題歌"],
-    ["アニソン", "ONE PIECE 主題歌", "ONE PIECE 主題歌"],
-    ["アニソン", "NARUTO 主題歌", "NARUTO 主題歌"],
-    ["アニソン", "進撃の巨人 主題歌", "進撃の巨人 主題歌"],
-    ["アニソン", "名探偵コナン 主題歌", "名探偵コナン 主題歌"],
-    ["アニソン", "ガンダム 主題歌", "ガンダム 主題歌"],
-    ["アニソン", "ポケモン 主題歌", "ポケモン 主題歌"],
-    ["アニソン", "エヴァンゲリオン 主題歌", "エヴァンゲリオン 主題歌"],
-    ["J-POP", "YOASOBI 名曲", "YOASOBI"],
-    ["J-POP", "Ado 名曲", "Ado"],
-    ["J-POP", "Official髭男dism 名曲", "Official髭男dism"],
-    ["J-POP", "米津玄師 名曲", "米津玄師"],
-    ["J-POP", "Mrs. GREEN APPLE 名曲", "Mrs. GREEN APPLE"],
-    ["J-POP", "King Gnu 名曲", "King Gnu"],
-    ["J-POP", "back number 名曲", "back number"],
-    ["J-POP", "あいみょん 名曲", "あいみょん"],
-    ["J-POP", "Vaundy 名曲", "Vaundy"],
-    ["J-POP", "宇多田ヒカル 名曲", "宇多田ヒカル"],
-    ["ボカロ", "初音ミク 定番", "初音ミク"],
-    ["ボカロ", "DECO*27 名曲", "DECO27"],
-    ["ボカロ", "wowaka 名曲", "wowaka"],
-    ["ボカロ", "Orangestar 名曲", "Orangestar"],
-    ["ボカロ", "Kanaria 名曲", "Kanaria"],
-    ["ボカロ", "ピノキオピー 名曲", "ピノキオピー"],
-    ["ボカロ", "kemu 名曲", "kemu"],
-    ["ボカロ", "Neru 名曲", "Neru"],
-    ["ボカロ", "じん 名曲", "じん"],
-    ["ボカロ", "バルーン 名曲", "バルーン"],
-    ["K-POP", "BTS 名曲", "BTS"],
-    ["K-POP", "BLACKPINK 名曲", "BLACKPINK"],
-    ["K-POP", "TWICE 名曲", "TWICE"],
-    ["K-POP", "NewJeans 名曲", "NewJeans"],
-    ["K-POP", "LE SSERAFIM 名曲", "LE SSERAFIM"],
-    ["K-POP", "IVE 名曲", "IVE"],
-    ["K-POP", "SEVENTEEN 名曲", "SEVENTEEN"],
-    ["K-POP", "Stray Kids 名曲", "Stray Kids"],
-    ["K-POP", "aespa 名曲", "aespa"],
-    ["K-POP", "NCT 名曲", "NCT"],
-    ["ロック", "BUMP OF CHICKEN 名曲", "BUMP OF CHICKEN"],
-    ["ロック", "RADWIMPS 名曲", "RADWIMPS"],
-    ["ロック", "ONE OK ROCK 名曲", "ONE OK ROCK"],
-    ["ロック", "ASIAN KUNG-FU GENERATION 名曲", "ASIAN KUNG-FU GENERATION"],
-    ["ロック", "ELLEGARDEN 名曲", "ELLEGARDEN"],
-    ["ロック", "サカナクション 名曲", "サカナクション"],
-    ["ロック", "ヨルシカ 名曲", "ヨルシカ"],
-    ["ロック", "ずっと真夜中でいいのに。名曲", "ずっと真夜中でいいのに"],
-    ["ロック", "UVERworld 名曲", "UVERworld"],
-    ["ロック", "LiSA 名曲", "LiSA"],
-    ["アイドル", "乃木坂46 名曲", "乃木坂46"],
-    ["アイドル", "櫻坂46 名曲", "櫻坂46"],
-    ["アイドル", "日向坂46 名曲", "日向坂46"],
-    ["アイドル", "AKB48 名曲", "AKB48"],
-    ["アイドル", "モーニング娘。名曲", "モーニング娘"],
-    ["アイドル", "ももいろクローバーZ 名曲", "ももいろクローバーZ"],
-    ["アイドル", "Snow Man 名曲", "Snow Man"],
-    ["アイドル", "SixTONES 名曲", "SixTONES"],
-    ["アイドル", "なにわ男子 名曲", "なにわ男子"],
-    ["アイドル", "King & Prince 名曲", "King & Prince"],
-    ["ゲーム音楽", "Final Fantasy 音楽", "Final Fantasy soundtrack"],
-    ["ゲーム音楽", "Dragon Quest 音楽", "Dragon Quest soundtrack"],
-    ["ゲーム音楽", "ゼルダの伝説 音楽", "Zelda soundtrack"],
-    ["ゲーム音楽", "スプラトゥーン 音楽", "Splatoon soundtrack"],
-    ["ゲーム音楽", "ペルソナ 音楽", "Persona soundtrack"],
-    ["ゲーム音楽", "NieR 音楽", "NieR soundtrack"],
-    ["ゲーム音楽", "モンスターハンター 音楽", "Monster Hunter soundtrack"],
-    ["ゲーム音楽", "星のカービィ 音楽", "Kirby soundtrack"],
-    ["ゲーム音楽", "ポケットモンスター 音楽", "Pokemon soundtrack"],
-    ["ゲーム音楽", "UNDERTALE 音楽", "UNDERTALE soundtrack"],
-    ["平成ヒット", "Mr.Children 名曲", "Mr.Children"],
-    ["平成ヒット", "スピッツ 名曲", "スピッツ"],
-    ["平成ヒット", "B'z 名曲", "B'z"],
-    ["平成ヒット", "GLAY 名曲", "GLAY"],
-    ["平成ヒット", "L'Arc-en-Ciel 名曲", "L'Arc-en-Ciel"],
-    ["平成ヒット", "浜崎あゆみ 名曲", "浜崎あゆみ"],
-    ["平成ヒット", "安室奈美恵 名曲", "安室奈美恵"],
-    ["平成ヒット", "椎名林檎 名曲", "椎名林檎"],
-    ["平成ヒット", "DREAMS COME TRUE 名曲", "DREAMS COME TRUE"],
-    ["平成ヒット", "ポルノグラフィティ 名曲", "ポルノグラフィティ"],
-    ["映画・ドラマ", "君の名は。音楽", "君の名は soundtrack"],
-    ["映画・ドラマ", "天気の子 音楽", "天気の子 soundtrack"],
-    ["映画・ドラマ", "花束みたいな恋をした 音楽", "花束みたいな恋をした"],
-    ["映画・ドラマ", "逃げるは恥だが役に立つ 主題歌", "逃げるは恥だが役に立つ 主題歌"],
-    ["映画・ドラマ", "silent 主題歌", "silent 主題歌"],
-    ["映画・ドラマ", "MIU404 主題歌", "MIU404 主題歌"],
-    ["映画・ドラマ", "アンナチュラル 主題歌", "アンナチュラル 主題歌"],
-    ["映画・ドラマ", "ブラッシュアップライフ 音楽", "ブラッシュアップライフ"],
-    ["映画・ドラマ", "コンフィデンスマンJP 主題歌", "コンフィデンスマンJP 主題歌"],
-    ["映画・ドラマ", "海猿 主題歌", "海猿 主題歌"],
-    ["その他", "ディズニー 名曲", "Disney songs"],
-    ["その他", "ジブリ 名曲", "Studio Ghibli songs"],
-    ["その他", "TikTok 人気曲", "TikTok hits"],
-    ["その他", "カラオケ定番", "karaoke hits japan"],
-    ["その他", "卒業ソング", "graduation songs japan"],
-    ["その他", "夏うた", "summer songs japan"],
-    ["その他", "冬うた", "winter songs japan"],
-    ["その他", "クリスマスソング", "christmas songs japan"],
-    ["その他", "応援ソング", "cheer songs japan"],
-    ["その他", "結婚式ソング", "wedding songs japan"],
-  ];
-  const generated = topicSeeds.map(([genre, name, seed], index) => {
-    const number = index + 1;
-    return {
-      id: `sample-auto-${number}`,
-      name,
-      genre,
-      description: "仮で用意した公開お題です。曲は初回プレイ時にApple/iTunesから取得されます。",
-      creator: "イントロキング",
-      createdAt: new Date(Date.UTC(2026, 4, 1, 1, index)).toISOString(),
-      baseLikes: 40 + ((100 - index) % 37),
-      likes: 40 + ((100 - index) % 37),
-      views: 280 + (100 - index) * 9,
-      likedBy: [],
-      published: true,
-      seedQuery: `${seed} ${number}`,
-      tracks: [],
-    };
-  });
-  return [...baseDefaultTopics, ...generated];
-}
-
-const defaultTopics = createDefaultTopics();
+const defaultTopics = [];
 
 const topicGenreOptions = [
   "アニソン",
@@ -357,23 +185,7 @@ function loadTopics() {
   try {
     const saved = JSON.parse(localStorage.getItem("introKingTopics") || "[]");
     if (saved.length) {
-      const defaultTopicMap = new Map(defaultTopics.map((topic) => [topic.id, topic]));
-      const normalizedSaved = saved.map((topic) => {
-        const defaultTopic = defaultTopicMap.get(topic.id);
-        if (!defaultTopic) return topic;
-        return {
-          ...topic,
-          name: defaultTopic.name,
-          genre: defaultTopic.genre,
-          description: defaultTopic.description,
-          creator: defaultTopic.creator,
-          seedQuery: defaultTopic.seedQuery,
-          baseLikes: defaultTopic.baseLikes,
-          likes: defaultTopic.baseLikes + (topic.likedBy?.length || 0),
-          views: Math.max(topic.views || 0, defaultTopic.views || 0),
-          published: true,
-        };
-      });
+      const normalizedSaved = saved.filter((topic) => !isDefaultTopic(topic));
       const savedIds = new Set(normalizedSaved.map((topic) => topic.id));
       state.topics = [...normalizedSaved, ...defaultTopics.filter((topic) => !savedIds.has(topic.id))];
     } else {
@@ -383,6 +195,10 @@ function loadTopics() {
     state.topics = defaultTopics;
   }
   saveTopics();
+}
+
+function isDefaultTopic(topic) {
+  return String(topic?.id || "").startsWith("sample-") || topic?.creator === "イントロキング";
 }
 
 function saveTopics() {
