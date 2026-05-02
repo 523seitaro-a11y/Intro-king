@@ -17,6 +17,7 @@
         <button type="submit">検索</button>
       </form>
       <div class="top-actions">
+        <button id="loginButton" class="primary-button" type="button">ログイン</button>
         <button id="myDataButton" class="icon-button" type="button" aria-label="マイページ">人</button>
         <button id="createTopicButton" class="primary-button" type="button">お題作成</button>
       </div>
@@ -326,6 +327,19 @@
     <footer class="site-footer">
       Preview audio and artwork provided courtesy of iTunes. Tracks link back to Apple/iTunes after each answer.
     </footer>
+
+    <dialog id="loginDialog" class="login-dialog">
+      <form id="loginForm">
+        <h2>ログイン</h2>
+        <p>プレイヤー名を登録すると、マイページとお題作成が使えます。</p>
+        <label for="loginNameInput">プレイヤー名</label>
+        <input id="loginNameInput" maxlength="24" placeholder="例: intro_master" required />
+        <div class="dialog-actions">
+          <button id="loginCancelButton" class="ghost-button" type="button">キャンセル</button>
+          <button class="primary-button" type="submit">ログイン</button>
+        </div>
+      </form>
+    </dialog>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script src="app.js"></script>

@@ -94,6 +94,7 @@ const state = {
   timerId: null,
   answered: false,
   totalTime: 0,
+  musicSearchSource: [],
   audio: new Audio(),
   sound: new Audio(),
 };
@@ -157,6 +158,11 @@ const elements = {
   newListButton: document.querySelector("#newListButton"),
   topSearchForm: document.querySelector("#topSearchForm"),
   topSearchInput: document.querySelector("#topSearchInput"),
+  loginButton: document.querySelector("#loginButton"),
+  loginDialog: document.querySelector("#loginDialog"),
+  loginForm: document.querySelector("#loginForm"),
+  loginNameInput: document.querySelector("#loginNameInput"),
+  loginCancelButton: document.querySelector("#loginCancelButton"),
   myDataButton: document.querySelector("#myDataButton"),
   profileForm: document.querySelector("#profileForm"),
   profileImageInput: document.querySelector("#profileImageInput"),
@@ -398,7 +404,14 @@ function bindEvents() {
   });
 
   elements.createTopicButton.addEventListener("click", () => openCreateView());
+  elements.loginButton.addEventListener("click", openLoginDialog);
+  elements.loginCancelButton.addEventListener("click", () => elements.loginDialog.close());
+  elements.loginForm.addEventListener("submit", loginPlayer);
   elements.myDataButton.addEventListener("click", () => {
+    if (!state.player) {
+      openLoginDialog();
+      return;
+    }
     state.profilePageUser = "";
     route("myData");
   });
@@ -510,6 +523,24 @@ function openUserPage(userName) {
   route("myData");
 }
 
+function openLoginDialog() {
+  elements.loginNameInput.value = state.player;
+  if (elements.loginDialog.open) return;
+  elements.loginDialog.showModal();
+  elements.loginNameInput.focus();
+}
+
+function loginPlayer(event) {
+  event.preventDefault();
+  state.player = elements.loginNameInput.value.trim();
+  if (!state.player) return;
+  localStorage.setItem("introKingPlayer", state.player);
+  elements.loginDialog.close();
+  renderPlayer();
+  renderAuthState();
+  showToast("ログインしました。");
+}
+
 function openCreateView(topicId = "") {
   const topic = topicId ? getTopic(topicId) : null;
   renderGenreSelect(topic?.genre);
@@ -545,8 +576,7 @@ async function searchMusicForTopic(event) {
   elements.musicSearchResults.innerHTML = `<div class="empty-state">検索中...</div>`;
   try {
     const tracks = await searchTracks(query);
-    elements.musicSearchResults.innerHTML = tracks.slice(0, 12).map(musicResultItem).join("");
-    state.musicSearchCache = tracks.slice(0, 12);
+    renderMusicResultList(tracks.slice(0, 12));
   } catch (error) {
     console.error(error);
     elements.musicSearchResults.innerHTML = `<div class="empty-state">曲の検索に失敗しました</div>`;
@@ -559,14 +589,21 @@ async function renderMusicSuggestions() {
   elements.musicSearchResults.innerHTML = `<div class="empty-state">予測曲を読み込み中...</div>`;
   try {
     const tracks = await searchTracks(query);
-    state.musicSearchCache = tracks.slice(0, 12);
-    elements.musicSearchResults.innerHTML = state.musicSearchCache.length
-      ? state.musicSearchCache.map(musicResultItem).join("")
-      : `<div class="empty-state">予測曲が見つかりません</div>`;
+    renderMusicResultList(tracks.slice(0, 12));
+    if (!state.musicSearchCache.length) elements.musicSearchResults.innerHTML = `<div class="empty-state">予測曲が見つかりません</div>`;
   } catch (error) {
     console.error(error);
     elements.musicSearchResults.innerHTML = `<div class="empty-state">予測曲の取得に失敗しました</div>`;
   }
+}
+
+function renderMusicResultList(tracks = state.musicSearchSource) {
+  state.musicSearchSource = tracks;
+  const selectedIds = new Set(state.draftTracks.map((track) => track.trackId));
+  state.musicSearchCache = tracks.filter((track) => !selectedIds.has(track.trackId)).slice(0, 12);
+  elements.musicSearchResults.innerHTML = state.musicSearchCache.length
+    ? state.musicSearchCache.map(musicResultItem).join("")
+    : `<div class="empty-state">追加できる曲がありません</div>`;
 }
 
 function musicResultItem(track, index) {
@@ -597,11 +634,13 @@ function addTrackFromSearch(index) {
   state.draftTracks.push(normalizeTrack(track));
   state.draftTracks = uniqueTracks(state.draftTracks);
   renderDraftTracks();
+  renderMusicResultList();
 }
 
 function removeDraftTrack(trackId) {
   state.draftTracks = state.draftTracks.filter((track) => track.trackId !== trackId);
   renderDraftTracks();
+  renderMusicResultList();
 }
 
 function renderDraftTracks() {
@@ -1255,6 +1294,14 @@ function getFirstPlaceCount(player, records) {
 
 function renderPlayer() {
   renderAvatar(elements.myDataButton, "icon-button");
+  renderAuthState();
+}
+
+function renderAuthState() {
+  const loggedIn = Boolean(state.player);
+  elements.loginButton.classList.toggle("hidden", loggedIn);
+  elements.myDataButton.classList.toggle("hidden", !loggedIn);
+  elements.createTopicButton.classList.toggle("hidden", !loggedIn);
 }
 
 function renderAvatar(element, className) {
@@ -1284,6 +1331,12 @@ function route(name) {
 
 function syncRoute() {
   const name = window.location.hash.replace("#", "") || "home";
+  if ((name === "myData" || name === "profileSettings" || name === "create") && !state.player) {
+    route("home");
+    openLoginDialog();
+    return;
+  }
+  document.body.classList.toggle("create-mode", name === "create");
   Object.entries(views).forEach(([key, view]) => {
     view.classList.toggle("active", key === name);
   });

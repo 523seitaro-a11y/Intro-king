@@ -151,6 +151,10 @@ main {
   padding: 34px clamp(18px, 4vw, 64px) 64px;
 }
 
+body.create-mode .topbar {
+  display: none;
+}
+
 .view {
   display: none;
 }
@@ -833,7 +837,7 @@ textarea {
   gap: 28px;
   align-items: start;
   max-width: none;
-  padding-left: 198px;
+  padding-left: 260px;
 }
 
 .create-main {
@@ -863,7 +867,7 @@ textarea {
   top: 78px;
   bottom: 0;
   left: 12px;
-  width: 176px;
+  width: 238px;
   max-height: none;
   overflow-y: auto;
   align-content: start;
