@@ -1369,8 +1369,8 @@ textarea {
 
 .track-card {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
   align-items: center;
   padding: 18px;
   border: 1px solid var(--line);
@@ -1381,10 +1381,12 @@ textarea {
 
 .track-card img {
   display: block;
-  width: min(220px, 100%);
+  width: 132px;
   aspect-ratio: 1;
   border-radius: 8px;
   object-fit: cover;
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .track-card img.hidden {

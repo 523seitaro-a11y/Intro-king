@@ -1,7 +1,7 @@
 const gameModes = [
-  { id: "easy", label: "初級", questions: 5, description: "5問" },
-  { id: "normal", label: "中級", questions: 10, description: "10問" },
-  { id: "hard", label: "上級", questions: 15, description: "15問" },
+  { id: "easy", label: "初級", questions: 10, description: "人気上位30%から10問", rangeRatio: 0.3 },
+  { id: "normal", label: "中級", questions: 10, description: "人気上位60%から10問", rangeRatio: 0.6 },
+  { id: "hard", label: "上級", questions: 10, description: "全曲から10問", rangeRatio: 1 },
   { id: "all", label: "全問チャレンジ", questions: 999, description: "全曲" },
 ];
 
@@ -614,7 +614,7 @@ async function searchMusicForTopic(event) {
   elements.musicSearchResults.innerHTML = `<div class="empty-state">検索中...</div>`;
   try {
     const tracks = await searchTracks(query);
-    renderMusicResultList(tracks);
+    renderMusicResultList(filterTracksByQuery(tracks, query));
   } catch (error) {
     console.error(error);
     elements.musicSearchResults.innerHTML = `<div class="empty-state">曲の検索に失敗しました</div>`;
@@ -642,6 +642,20 @@ function renderMusicResultList(tracks = state.musicSearchSource) {
   elements.musicSearchResults.innerHTML = state.musicSearchCache.length
     ? state.musicSearchCache.map(musicResultItem).join("")
     : `<div class="empty-state">追加できる曲がありません</div>`;
+}
+
+function filterTracksByQuery(tracks, query) {
+  const words = query
+    .toLowerCase()
+    .split(/\s+/)
+    .map((word) => word.trim())
+    .filter(Boolean);
+  if (!words.length) return tracks;
+  const matched = tracks.filter((track) => {
+    const haystack = `${track.trackName} ${track.artistName}`.toLowerCase();
+    return words.every((word) => haystack.includes(word));
+  });
+  return matched.length ? matched : tracks;
 }
 
 function musicResultItem(track, index) {
@@ -984,7 +998,7 @@ async function startGame(topicId, mode = state.currentMode) {
   state.currentTopic = topic;
   state.currentMode = mode;
   state.rankingModeId = mode.id;
-  state.tracks = shuffle(topic.tracks).slice(0, questionCount);
+  state.tracks = selectTracksForMode(topic, mode, questionCount);
   state.questionIndex = 0;
   state.correctCount = 0;
   state.totalTime = 0;
@@ -996,6 +1010,19 @@ function getModeQuestionCount(mode, topic) {
   const availableCount = getAvailableTrackCount(topic);
   if (mode.id === "all") return topic.tracks.length;
   return Math.min(mode.questions, availableCount);
+}
+
+function selectTracksForMode(topic, mode, questionCount) {
+  if (mode.id === "all") return shuffle(topic.tracks);
+  const orderedTracks = [...topic.tracks];
+  const preferredCount = Math.max(questionCount, Math.ceil(orderedTracks.length * (mode.rangeRatio || 1)));
+  const preferredTracks = orderedTracks.slice(0, preferredCount);
+  const fallbackTracks = orderedTracks.slice(preferredCount);
+  const selected = shuffle(preferredTracks).slice(0, questionCount);
+  if (selected.length >= questionCount) return selected;
+  const selectedIds = new Set(selected.map((track) => track.trackId));
+  const fallback = shuffle(fallbackTracks.filter((track) => !selectedIds.has(track.trackId))).slice(0, questionCount - selected.length);
+  return [...selected, ...fallback];
 }
 
 function getAvailableTrackCount(topic) {
