@@ -7,6 +7,17 @@ const gameModes = [
 
 const defaultTopics = [];
 
+const supabaseConfig = {
+  url: "https://xblylmubtrpynwgcizwl.supabase.co",
+  publishableKey: "sb_publishable_Hj6uRxvf4clbR8Lbh_6mdw_YnTd2lBN",
+};
+
+const supabaseRestUrl = `${supabaseConfig.url}/rest/v1`;
+const supabaseTables = {
+  topics: "intro_topics",
+  rankings: "intro_rankings",
+};
+
 const topicGenreOptions = [
   "アニソン",
   "J-POP",
@@ -56,6 +67,8 @@ const state = {
   audio: new Audio(),
   sound: new Audio(),
   countdownTimerId: null,
+  supabaseAvailable: true,
+  supabaseSyncTimerId: null,
 };
 
 const views = {
@@ -181,28 +194,148 @@ const elements = {
   toast: document.querySelector("#toast"),
 };
 
-function loadTopics() {
+async function loadTopics() {
+  const localTopics = loadLocalTopics();
+  const sharedTopics = await fetchSharedTopics();
+  const topics = sharedTopics.length ? mergeTopics(localTopics, sharedTopics) : localTopics;
+  state.topics = topics.length ? topics : defaultTopics;
+  saveTopics({ sync: false });
+}
+
+function loadLocalTopics() {
   try {
     const saved = JSON.parse(localStorage.getItem("introKingTopics") || "[]");
     if (saved.length) {
       const normalizedSaved = saved.filter((topic) => !isDefaultTopic(topic));
       const savedIds = new Set(normalizedSaved.map((topic) => topic.id));
-      state.topics = [...normalizedSaved, ...defaultTopics.filter((topic) => !savedIds.has(topic.id))];
-    } else {
-      state.topics = defaultTopics;
+      return [...normalizedSaved, ...defaultTopics.filter((topic) => !savedIds.has(topic.id))];
     }
   } catch {
-    state.topics = defaultTopics;
+    return defaultTopics;
   }
-  saveTopics();
+  return defaultTopics;
 }
 
 function isDefaultTopic(topic) {
   return String(topic?.id || "").startsWith("sample-") || ["イントロキング", "イントロポスト"].includes(topic?.creator);
 }
 
-function saveTopics() {
+function saveTopics(options = {}) {
   localStorage.setItem("introKingTopics", JSON.stringify(state.topics));
+  if (options.sync === false) return;
+  scheduleTopicSync();
+}
+
+function mergeTopics(localTopics, sharedTopics) {
+  const topicsById = new Map();
+  [...localTopics, ...sharedTopics].forEach((topic) => {
+    if (!topic?.id || isDefaultTopic(topic)) return;
+    const current = topicsById.get(topic.id);
+    if (!current || new Date(topic.updatedAt || 0) >= new Date(current.updatedAt || 0)) {
+      topicsById.set(topic.id, normalizeTopic(topic));
+    }
+  });
+  return [...topicsById.values()];
+}
+
+function normalizeTopic(topic) {
+  return {
+    ...topic,
+    likedBy: Array.isArray(topic.likedBy) ? topic.likedBy : [],
+    tracks: Array.isArray(topic.tracks) ? topic.tracks : [],
+    likes: Number(topic.likes || 0),
+    baseLikes: Number(topic.baseLikes || 0),
+    views: Number(topic.views || 0),
+    playCount: Number(topic.playCount || 0),
+    published: Boolean(topic.published),
+  };
+}
+
+function supabaseHeaders(extra = {}) {
+  return {
+    apikey: supabaseConfig.publishableKey,
+    Authorization: `Bearer ${supabaseConfig.publishableKey}`,
+    "Content-Type": "application/json",
+    ...extra,
+  };
+}
+
+async function supabaseRequest(path, options = {}) {
+  if (!state.supabaseAvailable) return null;
+  try {
+    const response = await fetch(`${supabaseRestUrl}${path}`, {
+      ...options,
+      headers: supabaseHeaders(options.headers || {}),
+    });
+    if (!response.ok) throw new Error(`Supabase ${response.status}`);
+    if (response.status === 204) return null;
+    const text = await response.text();
+    return text ? JSON.parse(text) : null;
+  } catch (error) {
+    console.warn("Supabase sync skipped:", error);
+    state.supabaseAvailable = false;
+    return null;
+  }
+}
+
+async function fetchSharedTopics() {
+  const rows = await supabaseRequest(`/${supabaseTables.topics}?select=data`);
+  if (!Array.isArray(rows)) return [];
+  return rows.map((row) => row.data).filter(Boolean);
+}
+
+function scheduleTopicSync() {
+  window.clearTimeout(state.supabaseSyncTimerId);
+  state.supabaseSyncTimerId = window.setTimeout(syncTopicsToSupabase, 500);
+}
+
+async function syncTopicsToSupabase() {
+  if (!state.supabaseAvailable) return;
+  const rows = state.topics.filter((topic) => !isDefaultTopic(topic)).map((topic) => ({
+    id: topic.id,
+    data: normalizeTopic(topic),
+    updated_at: new Date().toISOString(),
+  }));
+  if (!rows.length) return;
+  await supabaseRequest(`/${supabaseTables.topics}?on_conflict=id`, {
+    method: "POST",
+    headers: {
+      Prefer: "resolution=merge-duplicates,return=minimal",
+    },
+    body: JSON.stringify(rows),
+  });
+}
+
+async function deleteSharedTopic(topicId) {
+  await supabaseRequest(`/${supabaseTables.topics}?id=eq.${encodeURIComponent(topicId)}`, {
+    method: "DELETE",
+    headers: {
+      Prefer: "return=minimal",
+    },
+  });
+}
+
+async function loadSharedRankings() {
+  const rows = await supabaseRequest(`/${supabaseTables.rankings}?select=key,data`);
+  if (!Array.isArray(rows)) return;
+  rows.forEach((row) => {
+    if (!row.key || !Array.isArray(row.data)) return;
+    localStorage.setItem(row.key, JSON.stringify(row.data));
+  });
+}
+
+async function saveSharedRanking(key, rankings) {
+  await supabaseRequest(`/${supabaseTables.rankings}?on_conflict=key`, {
+    method: "POST",
+    headers: {
+      Prefer: "resolution=merge-duplicates,return=minimal",
+    },
+    body: JSON.stringify({
+      key,
+      data: rankings,
+      updated_at: new Date().toISOString(),
+    }),
+  });
 }
 
 function renderHome() {
@@ -927,6 +1060,7 @@ function deleteEditingTopic() {
   if (!topic) return;
   state.topics = state.topics.filter((item) => item.id !== topic.id);
   saveTopics();
+  deleteSharedTopic(topic.id);
   elements.deleteTopicDialog.close();
   renderHome();
   showToast("お題を削除しました。");
@@ -1265,7 +1399,10 @@ function saveRanking(entry) {
   const nextEntry = previousEntry && previousEntry.time <= entry.time ? previousEntry : entry;
   rankings.push(nextEntry);
   rankings.sort((a, b) => a.time - b.time);
-  localStorage.setItem(rankingKey(entry.topicId, entry.mode), JSON.stringify(rankings.slice(0, 20)));
+  const key = rankingKey(entry.topicId, entry.mode);
+  const bestRankings = rankings.slice(0, 20);
+  localStorage.setItem(key, JSON.stringify(bestRankings));
+  saveSharedRanking(key, bestRankings);
 }
 
 function getRankings(topicId = state.currentTopic?.id, modeId = state.rankingModeId) {
@@ -1592,7 +1729,12 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-loadTopics();
-renderPlayer();
-bindEvents();
-syncRoute();
+async function initApp() {
+  await loadTopics();
+  await loadSharedRankings();
+  renderPlayer();
+  bindEvents();
+  syncRoute();
+}
+
+initApp();
