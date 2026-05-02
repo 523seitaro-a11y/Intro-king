@@ -1167,8 +1167,11 @@ function nextQuestion() {
 }
 
 function saveRanking(entry) {
-  const rankings = getRankings(entry.topicId, entry.mode);
-  rankings.push(entry);
+  const currentRankings = getRankings(entry.topicId, entry.mode);
+  const rankings = currentRankings.filter((item) => item.player !== entry.player);
+  const previousEntry = currentRankings.find((item) => item.player === entry.player);
+  const nextEntry = previousEntry && previousEntry.time <= entry.time ? previousEntry : entry;
+  rankings.push(nextEntry);
   rankings.sort((a, b) => a.time - b.time);
   localStorage.setItem(rankingKey(entry.topicId, entry.mode), JSON.stringify(rankings.slice(0, 20)));
 }
@@ -1229,7 +1232,7 @@ function renderRanking() {
       (entry, index) => `
         <li>
           <span>#${index + 1}</span>
-          <strong>${escapeHtml(index === 0 ? "イントロポスト" : entry.player)} / ${escapeHtml(entry.topic)}</strong>
+          <strong>${escapeHtml(entry.player)} / ${escapeHtml(entry.topic)}</strong>
           <span>${entry.time.toFixed(2)}秒</span>
         </li>
       `,
