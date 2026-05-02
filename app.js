@@ -261,7 +261,6 @@ function supabaseHeaders(extra = {}) {
 }
 
 async function supabaseRequest(path, options = {}) {
-  if (!state.supabaseAvailable) return null;
   try {
     const response = await fetch(`${supabaseRestUrl}${path}`, {
       ...options,
@@ -290,7 +289,6 @@ function scheduleTopicSync() {
 }
 
 async function syncTopicsToSupabase() {
-  if (!state.supabaseAvailable) return;
   const rows = state.topics.filter((topic) => !isDefaultTopic(topic)).map((topic) => ({
     id: topic.id,
     data: normalizeTopic(topic),
