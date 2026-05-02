@@ -143,7 +143,6 @@ const elements = {
   topicNameInput: document.querySelector("#topicNameInput"),
   topicGenreInput: document.querySelector("#topicGenreInput"),
   topicDescriptionInput: document.querySelector("#topicDescriptionInput"),
-  aiCreateButton: document.querySelector("#aiCreateButton"),
   unpublishTopicButton: document.querySelector("#unpublishTopicButton"),
   cancelEditButton: document.querySelector("#cancelEditButton"),
   musicSearchForm: document.querySelector("#musicSearchForm"),
@@ -400,10 +399,12 @@ function bindEvents() {
   elements.clearRankingButton.addEventListener("click", clearRanking);
 
   elements.topicForm.addEventListener("submit", saveTopicFromForm);
-  elements.aiCreateButton.addEventListener("click", createTopicWithAiDraft);
   elements.unpublishTopicButton.addEventListener("click", unpublishEditingTopic);
   elements.cancelEditButton.addEventListener("click", () => openCreateView());
   elements.musicSearchForm.addEventListener("submit", searchMusicForTopic);
+  elements.musicSearchInput.addEventListener("input", renderMusicSuggestions);
+  elements.topicNameInput.addEventListener("input", renderMusicSuggestions);
+  elements.topicGenreInput.addEventListener("change", renderMusicSuggestions);
 
   elements.profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -502,6 +503,7 @@ function openCreateView(topicId = "") {
   elements.unpublishTopicButton.classList.toggle("hidden", !topic?.published);
   elements.cancelEditButton.classList.toggle("hidden", !topic);
   renderDraftTracks();
+  renderMusicSuggestions();
   route("create");
 }
 
@@ -512,31 +514,13 @@ function renderGenreSelect(selectedGenre = "") {
   elements.topicGenreInput.value = topicGenreOptions.includes(selectedGenre) ? selectedGenre : topicGenreOptions[0];
 }
 
-async function createTopicWithAiDraft() {
-  const genre = elements.topicGenreInput.value || "J-POP";
-  const name = elements.topicNameInput.value.trim() || `${genre}おすすめイントロ`;
-  elements.topicNameInput.value = name;
-  elements.topicDescriptionInput.value =
-    elements.topicDescriptionInput.value.trim() || `${genre}から自動候補で作成した仮のお題です。曲を追加・削除して編集できます。`;
-
-  elements.musicSearchResults.innerHTML = `<div class="empty-state">AIで仮作成中...</div>`;
-  try {
-    const tracks = await searchTracks(`${name} ${genre}`);
-    state.draftTracks = uniqueTracks([...state.draftTracks, ...tracks]).slice(0, maxTopicTracks);
-    state.musicSearchCache = tracks.slice(0, 12);
-    elements.musicSearchResults.innerHTML = tracks.slice(0, 12).map(musicResultItem).join("");
-    renderDraftTracks();
-    showToast("AIで仮のお題を作成しました。曲を編集して保存してください。");
-  } catch (error) {
-    console.error(error);
-    elements.musicSearchResults.innerHTML = `<div class="empty-state">AI作成に失敗しました</div>`;
-  }
-}
-
 async function searchMusicForTopic(event) {
   event.preventDefault();
   const query = elements.musicSearchInput.value.trim();
-  if (!query) return;
+  if (!query) {
+    renderMusicSuggestions();
+    return;
+  }
   elements.musicSearchResults.innerHTML = `<div class="empty-state">検索中...</div>`;
   try {
     const tracks = await searchTracks(query);
@@ -545,6 +529,22 @@ async function searchMusicForTopic(event) {
   } catch (error) {
     console.error(error);
     elements.musicSearchResults.innerHTML = `<div class="empty-state">曲の検索に失敗しました</div>`;
+  }
+}
+
+async function renderMusicSuggestions() {
+  if (elements.musicSearchInput.value.trim()) return;
+  const query = `${elements.topicNameInput.value.trim()} ${elements.topicGenreInput.value || "J-POP"} 人気`.trim();
+  elements.musicSearchResults.innerHTML = `<div class="empty-state">予測曲を読み込み中...</div>`;
+  try {
+    const tracks = await searchTracks(query);
+    state.musicSearchCache = tracks.slice(0, 12);
+    elements.musicSearchResults.innerHTML = state.musicSearchCache.length
+      ? state.musicSearchCache.map(musicResultItem).join("")
+      : `<div class="empty-state">予測曲が見つかりません</div>`;
+  } catch (error) {
+    console.error(error);
+    elements.musicSearchResults.innerHTML = `<div class="empty-state">予測曲の取得に失敗しました</div>`;
   }
 }
 
@@ -898,6 +898,7 @@ function loadQuestion() {
   elements.gameTopic.textContent = state.currentTopic.name;
   elements.questionProgress.textContent = `${state.questionIndex + 1} / ${state.tracks.length}`;
   elements.artwork.src = largerArtwork(state.correctTrack.artworkUrl100);
+  elements.artwork.classList.add("hidden");
   elements.resultTitle.textContent = "この曲は？";
   elements.resultMeta.textContent = `${state.currentMode.label}モード。再生ボタンを押すとタイマーが動きます。`;
   elements.playButton.disabled = false;
@@ -958,6 +959,9 @@ function answer(trackId, button) {
   });
   if (trackId !== state.correctTrack.trackId) button.classList.add("wrong");
 
+  if (trackId === state.correctTrack.trackId) {
+    elements.artwork.classList.remove("hidden");
+  }
   elements.timerValue.textContent = elapsed.toFixed(2);
   elements.resultTitle.textContent = state.correctTrack.trackName;
   elements.resultMeta.innerHTML = `

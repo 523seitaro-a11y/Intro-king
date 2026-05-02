@@ -792,6 +792,14 @@ textarea {
   background: var(--panel);
 }
 
+.music-search-panel {
+  position: sticky;
+  top: 86px;
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+  align-self: start;
+}
+
 .creator-panel label {
   font-size: 13px;
   font-weight: 900;
@@ -800,7 +808,7 @@ textarea {
 .music-results,
 .track-list {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -808,18 +816,18 @@ textarea {
 
 .music-row {
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr) auto auto;
-  gap: 12px;
+  grid-template-columns: 44px minmax(0, 1fr) auto auto;
+  gap: 8px;
   align-items: center;
   border: 1px solid var(--line);
   border-radius: 14px;
-  padding: 10px;
+  padding: 8px;
   background: var(--panel);
 }
 
 .music-row img {
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   border-radius: 14px;
   object-fit: cover;
 }
@@ -834,7 +842,14 @@ textarea {
 
 .music-row small {
   color: var(--muted);
+  font-size: 12px;
   font-weight: 800;
+}
+
+.music-row .ghost-button {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
 }
 
 .genre-page-heading {
