@@ -902,10 +902,25 @@ textarea {
 
 .topic-image-choices {
   display: grid;
+  gap: 12px;
+}
+
+.topic-image-group {
+  display: grid;
+  gap: 6px;
+}
+
+.topic-image-group > strong {
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.topic-image-list {
+  display: grid;
   gap: 8px;
 }
 
-.topic-image-choices button {
+.topic-image-list button {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr);
   gap: 8px;
@@ -918,19 +933,20 @@ textarea {
   text-align: left;
 }
 
-.topic-image-choices button.active {
+.topic-image-list button.active {
   border-color: var(--brand-mint);
   background: rgba(171, 232, 219, 0.22);
 }
 
-.topic-image-choices img {
+.topic-image-list img {
   width: 44px;
   height: 32px;
   border-radius: 4px;
   object-fit: cover;
 }
 
-.topic-image-choices span {
+.topic-image-list span,
+.empty-image-option {
   overflow: hidden;
   color: var(--muted);
   font-size: 11px;

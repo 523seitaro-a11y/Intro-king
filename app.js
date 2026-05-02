@@ -669,28 +669,40 @@ function renderDraftTracks() {
 }
 
 function renderTopicImageChoices() {
-  const options = getTopicImageOptions();
+  const groups = getTopicImageOptionGroups();
   const selected = elements.topicImageInput.value || (state.draftTracks[0]?.artworkUrl100 ? largerArtwork(state.draftTracks[0].artworkUrl100) : defaultTopicImage);
-  elements.topicImageChoices.innerHTML = options
-    .map(
-      (option) => `
-        <button class="${option.value === selected ? "active" : ""}" data-topic-image="${escapeHtml(option.value)}" type="button">
-          <img src="${escapeHtml(option.value)}" alt="" />
-          <span>${escapeHtml(option.label)}</span>
-        </button>
-      `,
-    )
+  elements.topicImageChoices.innerHTML = groups
+    .map((group) => `
+      <div class="topic-image-group">
+        <strong>${escapeHtml(group.title)}</strong>
+        <div class="topic-image-list">
+          ${group.options.length ? group.options.map((option) => topicImageOption(option, selected)).join("") : `<span class="empty-image-option">追加した曲がありません</span>`}
+        </div>
+      </div>
+    `)
     .join("");
 }
 
-function getTopicImageOptions() {
+function topicImageOption(option, selected) {
+  return `
+    <button class="${option.value === selected ? "active" : ""}" data-topic-image="${escapeHtml(option.value)}" type="button">
+      <img src="${escapeHtml(option.value)}" alt="" />
+      <span>${escapeHtml(option.label)}</span>
+    </button>
+  `;
+}
+
+function getTopicImageOptionGroups() {
   const albumOptions = uniqueTracks(state.draftTracks)
     .slice(0, 12)
     .map((track, index) => ({
       label: `${index + 1}. ${track.trackName}`,
       value: largerArtwork(track.artworkUrl100),
     }));
-  return [{ label: "運営画像", value: defaultTopicImage }, ...albumOptions];
+  return [
+    { title: "運営画像", options: [{ label: "デフォルト", value: defaultTopicImage }] },
+    { title: "追加した曲のアルバム画像", options: albumOptions },
+  ];
 }
 
 function setTopicImage(value) {
