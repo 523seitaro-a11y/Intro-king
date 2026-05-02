@@ -1295,10 +1295,10 @@ function answer(trackId, button) {
   });
   if (trackId === state.correctTrack.trackId) {
     state.correctCount += 1;
-    elements.artwork.classList.remove("hidden");
   } else {
     button.classList.add("wrong");
   }
+  elements.artwork.classList.remove("hidden");
   elements.timerValue.textContent = elapsed.toFixed(2);
   elements.resultTitle.textContent = state.correctTrack.trackName;
   elements.resultMeta.innerHTML = `
