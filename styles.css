@@ -301,6 +301,22 @@ body.create-mode .topbar {
   scrollbar-width: none;
 }
 
+.feed-grid .topic-card {
+  grid-template-rows: 128px 36px 18px 22px;
+  width: 128px;
+  height: 218px;
+}
+
+.feed-grid .topic-image-button {
+  width: 128px;
+  height: 128px;
+}
+
+.feed-grid .topic-meta {
+  align-self: end;
+  margin-top: 0;
+}
+
 .feed-grid::-webkit-scrollbar {
   display: none;
 }
@@ -1712,6 +1728,11 @@ textarea {
 .topic-meta {
   border-top: 1px solid var(--line);
   padding-top: 8px;
+}
+
+.feed-grid .topic-meta {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .like-button,

@@ -1444,6 +1444,19 @@ function postResult() {
 }
 
 function renderRanking() {
+  if (!state.player) {
+    elements.rankingTitle.textContent = "ランキング";
+    elements.rankingDescription.textContent = "ランキングを見るにはログインが必要です。";
+    elements.rankingModeTabs.innerHTML = "";
+    elements.rankingList.innerHTML = `
+      <li>
+        <span>-</span>
+        <strong>ログインしないとランキングは確認できません</strong>
+        <span>--</span>
+      </li>
+    `;
+    return;
+  }
   const rankings = getRankings();
   const hasTopic = Boolean(state.currentTopic);
   elements.rankingTitle.textContent = hasTopic ? `${state.currentTopic.name} ランキング` : "ランキング";
