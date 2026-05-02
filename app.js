@@ -589,7 +589,13 @@ function bindEvents() {
   elements.publishTopicButton.addEventListener("click", publishCurrentTopic);
   elements.detailEditButton.addEventListener("click", () => openCreateView(state.detailTopicId));
   elements.backHomeButton.addEventListener("click", () => route("home"));
-  elements.viewRankingButton.addEventListener("click", () => route("ranking"));
+  elements.viewRankingButton.addEventListener("click", () => {
+    if (!state.player) {
+      openLoginDialog();
+      return;
+    }
+    route("ranking");
+  });
   elements.resultLikeButton.addEventListener("click", () => likeTopic(state.lastEntry?.topicId));
   elements.postResultButton.addEventListener("click", postResult);
   elements.retryButton.addEventListener("click", retryLastTopic);
@@ -1257,7 +1263,7 @@ function loadQuestion() {
   elements.playButton.textContent = "再生";
   elements.nextButton.classList.add("hidden");
   renderChoices();
-  elements.choices.classList.remove("countdown-preview");
+  elements.choices.classList.add("countdown-preview");
 }
 
 function renderChoices() {
