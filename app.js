@@ -198,7 +198,7 @@ function loadTopics() {
 }
 
 function isDefaultTopic(topic) {
-  return String(topic?.id || "").startsWith("sample-") || topic?.creator === "イントロキング";
+  return String(topic?.id || "").startsWith("sample-") || ["イントロキング", "イントロポスト"].includes(topic?.creator);
 }
 
 function saveTopics() {
@@ -308,7 +308,7 @@ function creatorAvatarHtml(topic) {
 
 function getCreatorIcon(topic) {
   if (topic.creator === state.player) return state.profileIcon;
-  if (topic.creator === "イントロキング") return "王";
+  if (topic.creator === "イントロポスト") return "王";
   return topic.creatorIcon || topic.creator?.slice(0, 1).toUpperCase() || "人";
 }
 
@@ -350,7 +350,7 @@ function bindEvents() {
         standard: {
           title: "定番",
           eyebrow: "Standard",
-          description: "イントロキング定番お題",
+          description: "イントロポスト定番お題",
           topics: getStandardTopics(),
         },
         popular: {
@@ -484,7 +484,7 @@ function getPopularTopics() {
 }
 
 function getStandardTopics() {
-  return sortTopics(getPublishedTopics().filter((topic) => topic.creator === "イントロキング"), "popular");
+  return sortTopics(getPublishedTopics().filter((topic) => topic.creator === "イントロポスト"), "popular");
 }
 
 function getNewTopics() {
@@ -496,7 +496,7 @@ function getGenres() {
 }
 
 function getPublishedTopics() {
-  return state.topics.filter((topic) => topic.published || topic.creator === "イントロキング");
+  return state.topics.filter((topic) => topic.published || topic.creator === "イントロポスト");
 }
 
 function sortTopics(topics, type) {
@@ -1204,7 +1204,7 @@ function renderResult() {
 
 function postResult() {
   if (!state.lastEntry) return;
-  const text = `イントロキングで「${state.lastEntry.topic}」${state.lastEntry.modeLabel}を${state.lastEntry.time.toFixed(2)}秒でクリア！`;
+  const text = `イントロポストで「${state.lastEntry.topic}」${state.lastEntry.modeLabel}を${state.lastEntry.time.toFixed(2)}秒でクリア！`;
   const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
   window.open(url, "_blank", "noreferrer");
 }
@@ -1229,7 +1229,7 @@ function renderRanking() {
       (entry, index) => `
         <li>
           <span>#${index + 1}</span>
-          <strong>${escapeHtml(index === 0 ? "イントロキング" : entry.player)} / ${escapeHtml(entry.topic)}</strong>
+          <strong>${escapeHtml(index === 0 ? "イントロポスト" : entry.player)} / ${escapeHtml(entry.topic)}</strong>
           <span>${entry.time.toFixed(2)}秒</span>
         </li>
       `,
