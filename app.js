@@ -55,6 +55,7 @@ const state = {
   musicSearchSource: [],
   audio: new Audio(),
   sound: new Audio(),
+  countdownTimerId: null,
 };
 
 const views = {
@@ -1112,6 +1113,7 @@ function jsonp(url) {
 
 function loadQuestion() {
   stopAudio();
+  window.clearInterval(state.countdownTimerId);
   state.answered = false;
   state.correctTrack = state.tracks[state.questionIndex];
   state.startedAt = 0;
@@ -1121,11 +1123,12 @@ function loadQuestion() {
   elements.artwork.src = largerArtwork(state.correctTrack.artworkUrl100);
   elements.artwork.classList.add("hidden");
   elements.resultTitle.textContent = "この曲は？";
-  elements.resultMeta.textContent = `${state.currentMode.label}モード。再生ボタンを押すとタイマーが動きます。`;
+  elements.resultMeta.textContent = `${state.currentMode.label}モード。再生ボタンを押すとカウントダウンします。`;
   elements.playButton.disabled = false;
   elements.playButton.textContent = "再生";
   elements.nextButton.classList.add("hidden");
   renderChoices();
+  elements.choices.classList.add("hidden");
 }
 
 function renderChoices() {
@@ -1148,16 +1151,54 @@ function renderChoices() {
 
 function playCurrentTrack() {
   if (state.answered) return;
+  window.clearInterval(state.countdownTimerId);
   state.audio.src = state.correctTrack.previewUrl;
   state.audio.currentTime = 0;
-  state.audio.play();
-  state.startedAt = performance.now();
-  state.timerId = window.setInterval(updateTimer, 40);
+  state.audio.load();
   elements.playButton.disabled = true;
-  elements.playButton.textContent = "再生中";
-  elements.choices.querySelectorAll("button").forEach((button) => {
-    button.disabled = false;
-  });
+  elements.choices.classList.add("hidden");
+  let count = 3;
+  showCountdown(count);
+  state.countdownTimerId = window.setInterval(() => {
+    count -= 1;
+    if (count > 0) {
+      showCountdown(count);
+      return;
+    }
+    window.clearInterval(state.countdownTimerId);
+    startQuestionPlayback();
+  }, 1000);
+}
+
+function showCountdown(count) {
+  elements.playButton.textContent = String(count);
+  elements.resultTitle.textContent = String(count);
+  elements.resultMeta.textContent = "カウントダウン中...";
+}
+
+function startQuestionPlayback() {
+  state.audio.src = state.correctTrack.previewUrl;
+  state.audio.currentTime = 0;
+  state.audio
+    .play()
+    .then(() => {
+      state.startedAt = performance.now();
+      state.timerId = window.setInterval(updateTimer, 40);
+      elements.playButton.textContent = "再生中";
+      elements.resultTitle.textContent = "この曲は？";
+      elements.resultMeta.textContent = "選択肢から回答してください。";
+      elements.choices.classList.remove("hidden");
+      elements.choices.querySelectorAll("button").forEach((button) => {
+        button.disabled = false;
+      });
+    })
+    .catch(() => {
+      showToast("音源を再生できませんでした。もう一度再生を押してください。");
+      elements.resultTitle.textContent = "この曲は？";
+      elements.resultMeta.textContent = `${state.currentMode.label}モード。再生ボタンを押すとカウントダウンします。`;
+      elements.playButton.disabled = false;
+      elements.playButton.textContent = "再生";
+    });
 }
 
 function updateTimer() {
@@ -1516,6 +1557,7 @@ function getTopic(topicId) {
 
 function stopAudio() {
   window.clearInterval(state.timerId);
+  window.clearInterval(state.countdownTimerId);
   state.audio.pause();
 }
 

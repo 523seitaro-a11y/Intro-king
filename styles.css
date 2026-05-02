@@ -109,7 +109,7 @@ a {
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 6px;
   background: #ffffff;
 }
 
