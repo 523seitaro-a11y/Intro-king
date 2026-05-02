@@ -294,7 +294,8 @@ body.create-mode .topbar {
   grid-auto-columns: 128px;
   grid-auto-flow: column;
   grid-template-columns: none;
-  gap: 16px;
+  column-gap: 56px;
+  row-gap: 0;
   overflow-x: auto;
   padding-bottom: 8px;
   scroll-padding-inline: 2px;
@@ -302,9 +303,10 @@ body.create-mode .topbar {
 }
 
 .feed-grid .topic-card {
-  grid-template-rows: 128px 36px 18px 22px;
+  grid-template-rows: 128px 40px 22px 26px;
   width: 128px;
-  height: 218px;
+  height: 232px;
+  overflow: visible;
 }
 
 .feed-grid .topic-image-button {
@@ -315,6 +317,8 @@ body.create-mode .topbar {
 .feed-grid .topic-meta {
   align-self: end;
   margin-top: 0;
+  min-height: 22px;
+  overflow: visible;
 }
 
 .feed-grid::-webkit-scrollbar {
@@ -1937,7 +1941,7 @@ textarea {
   }
 
   .feed-grid {
-    grid-auto-columns: 132px;
+    grid-auto-columns: 128px;
     grid-auto-flow: column;
     grid-template-columns: none;
   }
