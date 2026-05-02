@@ -87,6 +87,7 @@ const elements = {
   modeTopicImage: document.querySelector("#modeTopicImage"),
   modeTopicTitle: document.querySelector("#modeTopicTitle"),
   modeTopicDescription: document.querySelector("#modeTopicDescription"),
+  modeTopicSummary: document.querySelector("#modeTopicSummary"),
   modeCreatorMeta: document.querySelector("#modeCreatorMeta"),
   modeLikeButton: document.querySelector("#modeLikeButton"),
   modeGrid: document.querySelector("#modeGrid"),
@@ -947,6 +948,7 @@ function renderModeSelect() {
   elements.modeTopicImage.innerHTML = topicImageHtml(state.selectedTopic);
   elements.modeTopicTitle.textContent = state.selectedTopic.name;
   elements.modeTopicDescription.textContent = `${state.selectedTopic.tracks.length}曲 / ${state.selectedTopic.genre || "未分類"}`;
+  elements.modeTopicSummary.textContent = state.selectedTopic.description || "説明はありません。";
   elements.modeCreatorMeta.innerHTML = creatorButton(state.selectedTopic, true);
   elements.modeLikeButton.textContent = `♥ ${state.selectedTopic.likes || 0}`;
   elements.modeLikeButton.classList.toggle("liked", isTopicLiked(state.selectedTopic));
