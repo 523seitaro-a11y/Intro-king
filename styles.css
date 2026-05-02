@@ -1447,6 +1447,16 @@ textarea {
   cursor: default;
 }
 
+.choice-grid.countdown-preview .choice-button {
+  color: transparent;
+  pointer-events: none;
+  user-select: none;
+}
+
+.choice-grid.countdown-preview .choice-button::selection {
+  background: transparent;
+}
+
 .ranking-list {
   display: grid;
   gap: 10px;

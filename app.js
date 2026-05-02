@@ -179,7 +179,6 @@ const elements = {
   myTopicList: document.querySelector("#myTopicList"),
   choices: document.querySelector("#choices"),
   rankingList: document.querySelector("#rankingList"),
-  clearRankingButton: document.querySelector("#clearRankingButton"),
   toast: document.querySelector("#toast"),
 };
 
@@ -462,8 +461,6 @@ function bindEvents() {
   elements.postResultButton.addEventListener("click", postResult);
   elements.retryButton.addEventListener("click", retryLastTopic);
   elements.resultHomeButton.addEventListener("click", () => route("home"));
-  elements.clearRankingButton.addEventListener("click", clearRanking);
-
   elements.topicForm.addEventListener("submit", saveTopicFromForm);
   elements.unpublishTopicButton.addEventListener("click", unpublishEditingTopic);
   elements.deleteTopicButton.addEventListener("click", () => elements.deleteTopicDialog.showModal());
@@ -1128,7 +1125,7 @@ function loadQuestion() {
   elements.playButton.textContent = "再生";
   elements.nextButton.classList.add("hidden");
   renderChoices();
-  elements.choices.classList.add("hidden");
+  elements.choices.classList.remove("countdown-preview");
 }
 
 function renderChoices() {
@@ -1156,7 +1153,7 @@ function playCurrentTrack() {
   state.audio.currentTime = 0;
   state.audio.load();
   elements.playButton.disabled = true;
-  elements.choices.classList.add("hidden");
+  elements.choices.classList.add("countdown-preview");
   let count = 3;
   showCountdown(count);
   state.countdownTimerId = window.setInterval(() => {
@@ -1187,7 +1184,7 @@ function startQuestionPlayback() {
       elements.playButton.textContent = "再生中";
       elements.resultTitle.textContent = "この曲は？";
       elements.resultMeta.textContent = "選択肢から回答してください。";
-      elements.choices.classList.remove("hidden");
+      elements.choices.classList.remove("countdown-preview");
       elements.choices.querySelectorAll("button").forEach((button) => {
         button.disabled = false;
       });
