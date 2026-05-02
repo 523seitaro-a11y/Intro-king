@@ -1132,12 +1132,6 @@ function renderModeSelect() {
 }
 
 async function startGame(topicId, mode = state.currentMode) {
-  if (!state.player) {
-    showToast("ランキング記録にはログインが必要です。まずプレイヤー名を登録してください。");
-    route("myData");
-    return;
-  }
-
   const topic = getTopic(topicId);
   if (!topic) return;
   if (!topic.tracks.length && topic.seedQuery) {
@@ -1389,7 +1383,7 @@ function nextQuestion() {
     totalQuestions: state.tracks.length,
     date: new Date().toISOString(),
   };
-  if (entry.correctCount === entry.totalQuestions) saveRanking(entry);
+  if (state.player && entry.correctCount === entry.totalQuestions) saveRanking(entry);
   state.lastEntry = entry;
   route("result");
 }
@@ -1428,8 +1422,12 @@ function renderResult() {
   elements.resultTopic.textContent = entry.topic;
   elements.finalTime.textContent = entry.time.toFixed(2);
   elements.resultMeta.textContent = `${entry.modeLabel} / 正解数 ${entry.correctCount} / ${entry.totalQuestions}`;
-  elements.resultRankText.textContent =
-    rank > 0 ? `${entry.topic} / ${entry.modeLabel} の ${rank}位に入りました。` : "全問正解ではないためランキングには記録されません。";
+  if (!entry.player) {
+    elements.resultRankText.textContent = "ログインしていないためランキングには記録されません。";
+  } else {
+    elements.resultRankText.textContent =
+      rank > 0 ? `${entry.topic} / ${entry.modeLabel} の ${rank}位に入りました。` : "全問正解ではないためランキングには記録されません。";
+  }
   const topic = getTopic(entry.topicId);
   const liked = isTopicLiked(topic);
   elements.resultLikeButton.classList.toggle("liked", liked);
