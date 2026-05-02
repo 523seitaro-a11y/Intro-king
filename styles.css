@@ -291,6 +291,11 @@ body.create-mode .topbar {
   overflow-x: auto;
   padding-bottom: 8px;
   scroll-padding-inline: 2px;
+  scrollbar-width: none;
+}
+
+.feed-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .hero {
@@ -652,6 +657,7 @@ textarea {
   color: #d93656;
 }
 
+.topic-stats,
 .static-like {
   display: block;
   width: 100%;
@@ -659,6 +665,16 @@ textarea {
   max-width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.topic-stats.liked {
+  color: #d93656;
+}
+
+.static-like {
   pointer-events: none;
 }
 

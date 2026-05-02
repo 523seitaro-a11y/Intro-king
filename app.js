@@ -15,6 +15,7 @@ const baseDefaultTopics = [
     createdAt: "2026-05-01T00:00:00.000Z",
     baseLikes: 12,
     likes: 12,
+    views: 148,
     likedBy: [],
     published: true,
     seedQuery: "anime song",
@@ -29,6 +30,7 @@ const baseDefaultTopics = [
     createdAt: "2026-05-01T00:01:00.000Z",
     baseLikes: 9,
     likes: 9,
+    views: 126,
     likedBy: [],
     published: true,
     seedQuery: "j-pop hits",
@@ -43,6 +45,7 @@ const baseDefaultTopics = [
     createdAt: "2026-05-01T00:02:00.000Z",
     baseLikes: 7,
     likes: 7,
+    views: 103,
     likedBy: [],
     published: true,
     seedQuery: "japanese rock",
@@ -164,6 +167,7 @@ function createDefaultTopics() {
       createdAt: new Date(Date.UTC(2026, 4, 1, 1, index)).toISOString(),
       baseLikes: 40 + ((100 - index) % 37),
       likes: 40 + ((100 - index) % 37),
+      views: 280 + (100 - index) * 9,
       likedBy: [],
       published: true,
       seedQuery: `${seed} ${number}`,
@@ -366,6 +370,7 @@ function loadTopics() {
           seedQuery: defaultTopic.seedQuery,
           baseLikes: defaultTopic.baseLikes,
           likes: defaultTopic.baseLikes + (topic.likedBy?.length || 0),
+          views: Math.max(topic.views || 0, defaultTopic.views || 0),
           published: true,
         };
       });
@@ -420,7 +425,7 @@ function topicCard(topic) {
       <button class="topic-title-button" data-topic-id="${escapeHtml(topic.id)}" type="button">${escapeHtml(topic.name)}</button>
       <span>${escapeHtml(topic.genre || "未分類")} / ${topic.tracks.length}曲</span>
       <div class="topic-meta">
-        <span class="like-button static-like ${liked ? "liked" : ""}">♥ ${topic.likes || 0}</span>
+        <span class="topic-stats ${liked ? "liked" : ""}">ビュー ${formatCount(topic.views || 0)}　♥ ${formatCount(topic.likes || 0)}</span>
       </div>
     </article>
   `;
@@ -457,6 +462,13 @@ function topicImageHtml(topic, className = "") {
   const image = getTopicImage(topic);
   if (image) return `<img class="${className}" src="${escapeHtml(image)}" alt="" />`;
   return `<span class="topic-image-placeholder ${className}"></span>`;
+}
+
+function formatCount(value) {
+  const count = Number(value) || 0;
+  if (count >= 10000) return `${(count / 10000).toFixed(1).replace(".0", "")}万`;
+  if (count >= 1000) return `${(count / 1000).toFixed(1).replace(".0", "")}千`;
+  return String(count);
 }
 
 function creatorButton(topic, withName = false) {
@@ -967,6 +979,7 @@ async function saveTopicFromForm(event) {
     updatedAt: new Date().toISOString(),
     baseLikes: existing?.baseLikes || 0,
     likes: (existing?.baseLikes || 0) + likedBy.length,
+    views: existing?.views || 0,
     likedBy,
     published: existing?.published || false,
     tracks: state.draftTracks,
@@ -1089,6 +1102,8 @@ function playAnswerSound(isCorrect) {
 function openModeSelect(topicId) {
   const topic = getTopic(topicId);
   if (!topic) return;
+  topic.views = (topic.views || 0) + 1;
+  saveTopics();
   state.selectedTopic = topic;
   state.currentTopic = topic;
   state.currentMode = gameModes[1];
