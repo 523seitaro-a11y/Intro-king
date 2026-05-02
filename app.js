@@ -1034,7 +1034,7 @@ function renderTopicDetail() {
   elements.detailMeta.textContent = `${topic.genre || "未分類"} / ${topic.tracks.length}曲 / ビュー ${formatCount(topic.views || 0)} / ♥ ${formatCount(topic.likes || 0)}`;
   elements.detailDescription.textContent = topic.description || "説明はありません。";
   elements.publishTopicButton.classList.toggle("hidden", topic.published && !state.showPublishAction);
-  elements.publishTopicButton.textContent = topic.published ? "更新" : "投稿する";
+  elements.publishTopicButton.textContent = topic.published ? "更新" : "ポストする";
   elements.detailTrackList.innerHTML = topic.tracks.length
     ? topic.tracks.map(detailTrackItem).join("")
     : `<li class="empty-state">曲がありません</li>`;

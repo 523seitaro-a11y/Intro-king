@@ -294,7 +294,7 @@ body.create-mode .topbar {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 8px;
+  gap: 4px;
   max-height: 232px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -1843,7 +1843,7 @@ textarea {
 
 .mode-card:hover,
 .choice-button:hover {
-  background: rgba(244, 177, 184, 0.26);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .topic-card,
