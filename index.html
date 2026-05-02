@@ -112,17 +112,12 @@
 
       <section id="createView" class="view">
         <div class="create-shell">
-          <div class="create-topbar">
-            <button id="cancelEditButton" class="ghost-button" type="button">戻る</button>
-            <h2 id="createTitle">お題作成</h2>
-            <div class="create-top-actions">
-              <button id="unpublishTopicButton" class="ghost-button danger hidden" type="button">公開停止</button>
-              <button class="primary-button" type="submit" form="topicForm">保存</button>
-            </div>
-          </div>
-
           <div class="create-workspace">
             <form id="topicForm" class="creator-panel topic-detail-panel create-sidebar">
+              <div class="create-sidebar-heading">
+                <h2 id="createTitle">お題作成</h2>
+                <p>お題の詳細</p>
+              </div>
               <div class="topic-basic-fields">
                 <div>
                   <label for="topicNameInput">お題名</label>
@@ -138,6 +133,11 @@
               <div>
                 <label for="topicDescriptionInput">説明</label>
                 <textarea id="topicDescriptionInput" maxlength="1000" rows="5" placeholder="例: 2019年以降のアニメ主題歌"></textarea>
+              </div>
+              <div class="create-sidebar-actions">
+                <button class="primary-button" type="submit">保存</button>
+                <button id="unpublishTopicButton" class="ghost-button danger hidden" type="button">公開停止</button>
+                <button id="cancelEditButton" class="ghost-button" type="button">戻る</button>
               </div>
             </form>
 

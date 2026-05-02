@@ -512,13 +512,17 @@ textarea {
 }
 
 .like-button {
-  min-height: 30px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 0 10px;
-  background: rgba(171, 232, 219, 0.42);
-  color: #c63f63;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
   font-weight: 800;
+}
+
+.like-button.liked {
+  color: #d93656;
 }
 
 .creator-button {
@@ -604,10 +608,14 @@ textarea {
 .result-shell,
 .genre-page-shell,
 .mode-shell,
-.detail-shell,
-.my-data-shell {
+.detail-shell {
   max-width: 980px;
   margin: 0 auto;
+}
+
+.my-data-shell {
+  width: 100%;
+  max-width: none;
 }
 
 .mypage-layout {
@@ -615,7 +623,7 @@ textarea {
   grid-template-columns: minmax(0, 1fr);
   gap: 28px;
   align-items: start;
-  max-width: 1180px;
+  max-width: none;
   margin: 0 auto;
   padding-left: 198px;
 }
@@ -766,42 +774,16 @@ textarea {
 
 .create-shell {
   max-width: none;
-  margin: -34px calc(clamp(18px, 4vw, 64px) * -1) -64px;
-}
-
-.create-topbar {
-  position: sticky;
-  top: 66px;
-  z-index: 8;
-  display: grid;
-  grid-template-columns: 140px minmax(0, 1fr) auto;
-  gap: 16px;
-  align-items: center;
-  min-height: 62px;
-  border-bottom: 1px solid var(--line);
-  padding: 10px clamp(18px, 4vw, 64px);
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(12px);
-}
-
-.create-topbar h2 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.create-top-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
+  margin: 0 auto;
 }
 
 .create-workspace {
   display: grid;
-  grid-template-columns: 244px minmax(0, 1fr);
-  gap: 22px;
-  max-width: 1220px;
-  margin: 0 auto;
-  padding: 22px clamp(18px, 4vw, 64px) 64px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  max-width: none;
+  padding-left: 198px;
 }
 
 .create-main {
@@ -827,11 +809,41 @@ textarea {
 }
 
 .create-sidebar {
-  position: sticky;
-  top: 146px;
-  align-self: start;
-  max-height: calc(100vh - 168px);
+  position: fixed;
+  top: 78px;
+  bottom: 0;
+  left: 12px;
+  width: 176px;
+  max-height: none;
   overflow-y: auto;
+  align-content: start;
+  padding: 8px 10px 32px 0;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.create-sidebar-heading {
+  display: grid;
+  gap: 2px;
+}
+
+.create-sidebar-heading h2 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.create-sidebar-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.create-sidebar-actions {
+  display: grid;
+  gap: 8px;
 }
 
 .creator-panel {
@@ -1308,14 +1320,20 @@ textarea {
 .like-button,
 .status-badge {
   display: inline-flex;
-  min-height: 32px;
+  min-height: 0;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
-  padding: 0 12px;
+  border-radius: 0;
+  padding: 0;
   font-size: 13px;
   font-weight: 900;
   white-space: nowrap;
+}
+
+.status-badge {
+  min-height: 32px;
+  border-radius: 6px;
+  padding: 0 12px;
 }
 
 .status-badge.published {
@@ -1419,7 +1437,6 @@ textarea {
 .search-row,
 .primary-button,
 .ghost-button,
-.like-button,
 .status-badge,
 input,
 select,
@@ -1467,6 +1484,10 @@ textarea {
     padding-left: 0;
   }
 
+  .create-workspace {
+    padding-left: 0;
+  }
+
   .settings-shell {
     grid-template-columns: 1fr;
   }
@@ -1479,18 +1500,9 @@ textarea {
     max-height: none;
   }
 
-  .create-shell {
-    margin: -34px -18px -64px;
-  }
-
-  .create-topbar,
   .create-workspace,
   .create-main {
     grid-template-columns: 1fr;
-  }
-
-  .create-top-actions {
-    justify-content: stretch;
   }
 
   .topic-grid,

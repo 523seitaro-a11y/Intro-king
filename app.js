@@ -230,12 +230,13 @@ function renderHome() {
 }
 
 function topicCard(topic) {
+  const liked = isTopicLiked(topic);
   return `
     <article class="topic-card topic-card-action" data-topic-id="${escapeHtml(topic.id)}">
       <strong>${escapeHtml(topic.name)}</strong>
       <span>${escapeHtml(topic.genre || "未分類")} / ${topic.tracks.length}曲</span>
       <div class="topic-meta">
-        <button class="like-button" data-like-topic="${escapeHtml(topic.id)}" type="button" aria-label="いいね">♥ ${topic.likes || 0}</button>
+        <button class="like-button ${liked ? "liked" : ""}" data-like-topic="${escapeHtml(topic.id)}" type="button" aria-label="いいね">♥ ${topic.likes || 0}</button>
         ${creatorButton(topic)}
       </div>
     </article>
@@ -243,6 +244,7 @@ function topicCard(topic) {
 }
 
 function topicListItem(topic, index) {
+  const liked = isTopicLiked(topic);
   return `
     <li>
       <div class="topic-list-button topic-row" data-topic-id="${escapeHtml(topic.id)}">
@@ -250,7 +252,7 @@ function topicListItem(topic, index) {
         <strong>${escapeHtml(topic.name)}</strong>
         <small>${escapeHtml(topic.genre || "未分類")} / ${topic.tracks.length}曲 / ♥ ${topic.likes || 0}</small>
         ${creatorButton(topic)}
-        <button class="like-button" data-like-topic="${escapeHtml(topic.id)}" type="button" aria-label="いいね">♥</button>
+        <button class="like-button ${liked ? "liked" : ""}" data-like-topic="${escapeHtml(topic.id)}" type="button" aria-label="いいね">♥ ${topic.likes || 0}</button>
       </div>
     </li>
   `;
@@ -258,6 +260,10 @@ function topicListItem(topic, index) {
 
 function emptyCard(text) {
   return `<div class="empty-state">${escapeHtml(text)}</div>`;
+}
+
+function isTopicLiked(topic) {
+  return Boolean(topic?.likedBy?.includes(state.player || "guest"));
 }
 
 function creatorButton(topic, withName = false) {
@@ -773,6 +779,7 @@ function renderModeSelect() {
   elements.modeTopicDescription.textContent = `${state.selectedTopic.tracks.length}曲 / ${state.selectedTopic.genre || "未分類"}`;
   elements.modeCreatorMeta.innerHTML = creatorButton(state.selectedTopic, true);
   elements.modeLikeButton.textContent = `♥ ${state.selectedTopic.likes || 0}`;
+  elements.modeLikeButton.classList.toggle("liked", isTopicLiked(state.selectedTopic));
   elements.modeGrid.innerHTML = gameModes
     .map((mode) => {
       const playableCount = getModeQuestionCount(mode, state.selectedTopic);
