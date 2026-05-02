@@ -95,8 +95,7 @@ const elements = {
   modeRankingButton: document.querySelector("#modeRankingButton"),
   modeDetailButton: document.querySelector("#modeDetailButton"),
   modeHomeButton: document.querySelector("#modeHomeButton"),
-  detailBackButton: document.querySelector("#detailBackButton"),
-  detailEyebrow: document.querySelector("#detailEyebrow"),
+  detailTopicImage: document.querySelector("#detailTopicImage"),
   detailTitle: document.querySelector("#detailTitle"),
   detailMeta: document.querySelector("#detailMeta"),
   detailDescription: document.querySelector("#detailDescription"),
@@ -452,7 +451,6 @@ function bindEvents() {
   elements.modeLikeButton.addEventListener("click", () => likeTopic(state.selectedTopic?.id));
   elements.profileSettingsButton.addEventListener("click", () => route("profileSettings"));
   elements.profileSettingsBackButton.addEventListener("click", () => route("myData"));
-  elements.detailBackButton.addEventListener("click", () => route(state.detailReturnRoute || "mode"));
   elements.publishTopicButton.addEventListener("click", publishCurrentTopic);
   elements.detailEditButton.addEventListener("click", () => openCreateView(state.detailTopicId));
   elements.backHomeButton.addEventListener("click", () => route("home"));
@@ -876,6 +874,8 @@ function uniqueTracks(tracks) {
 function openTopicDetail(topicId, returnRoute = "mode", showPublish = false) {
   const topic = getTopic(topicId);
   if (!topic) return;
+  topic.views = (topic.views || 0) + 1;
+  saveTopics();
   state.detailTopicId = topic.id;
   state.detailReturnRoute = returnRoute;
   state.currentTopic = topic;
@@ -888,9 +888,9 @@ function openTopicDetail(topicId, returnRoute = "mode", showPublish = false) {
 function renderTopicDetail() {
   const topic = getTopic(state.detailTopicId);
   if (!topic) return;
-  elements.detailEyebrow.textContent = state.showPublishAction || !topic.published ? "Preview topic" : "Topic detail";
+  elements.detailTopicImage.innerHTML = topicImageHtml(topic);
   elements.detailTitle.textContent = topic.name;
-  elements.detailMeta.textContent = `${topic.genre || "未分類"} / ${topic.tracks.length}曲 / ${topic.likes || 0}いいね`;
+  elements.detailMeta.textContent = `${topic.genre || "未分類"} / ${topic.tracks.length}曲 / ビュー ${formatCount(topic.views || 0)} / ♥ ${formatCount(topic.likes || 0)}`;
   elements.detailDescription.textContent = topic.description || "説明はありません。";
   elements.publishTopicButton.classList.toggle("hidden", topic.published && !state.showPublishAction);
   elements.publishTopicButton.textContent = topic.published ? "更新" : "投稿する";
@@ -954,6 +954,8 @@ function playAnswerSound(isCorrect) {
 function openModeSelect(topicId) {
   const topic = getTopic(topicId);
   if (!topic) return;
+  topic.views = (topic.views || 0) + 1;
+  saveTopics();
   state.selectedTopic = topic;
   state.currentTopic = topic;
   state.currentMode = gameModes[1];
@@ -966,7 +968,7 @@ function renderModeSelect() {
   if (!state.selectedTopic) return;
   elements.modeTopicImage.innerHTML = topicImageHtml(state.selectedTopic);
   elements.modeTopicTitle.textContent = state.selectedTopic.name;
-  elements.modeTopicDescription.textContent = `${state.selectedTopic.tracks.length}曲 / ${state.selectedTopic.genre || "未分類"}`;
+  elements.modeTopicDescription.textContent = `${state.selectedTopic.genre || "未分類"} / ${state.selectedTopic.tracks.length}曲 / ビュー ${formatCount(state.selectedTopic.views || 0)} / ♥ ${formatCount(state.selectedTopic.likes || 0)}`;
   elements.modeTopicSummary.textContent = state.selectedTopic.description || "説明はありません。";
   elements.modeCreatorMeta.innerHTML = creatorButton(state.selectedTopic, true);
   elements.modeLikeButton.textContent = `♥ ${state.selectedTopic.likes || 0}`;

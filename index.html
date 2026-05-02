@@ -92,16 +92,15 @@
         <div class="mode-shell">
           <div class="section-heading genre-page-heading">
             <div id="modeTopicImage" class="mode-topic-image"></div>
-            <div>
-              <p class="eyebrow">Mode select</p>
+            <div class="topic-heading-main">
               <h2 id="modeTopicTitle">お題</h2>
-            </div>
-            <div class="mode-topic-side">
-              <div id="modeCreatorMeta" class="creator-meta"></div>
               <p id="modeTopicDescription">モードを選択</p>
+              <div id="modeCreatorMeta" class="creator-meta"></div>
               <button id="modeLikeButton" class="like-button" type="button">いいね</button>
             </div>
-            <p id="modeTopicSummary" class="mode-topic-summary"></p>
+            <div class="topic-heading-description">
+              <p id="modeTopicSummary" class="mode-topic-summary"></p>
+            </div>
           </div>
           <div id="modeGrid" class="mode-grid"></div>
           <div class="result-actions">
@@ -114,15 +113,16 @@
 
       <section id="topicDetailView" class="view">
         <div class="detail-shell">
-          <button id="detailBackButton" class="ghost-button" type="button">戻る</button>
           <div class="section-heading genre-page-heading">
-            <div>
-              <p id="detailEyebrow" class="eyebrow">Topic detail</p>
+            <div id="detailTopicImage" class="mode-topic-image"></div>
+            <div class="topic-heading-main">
               <h2 id="detailTitle">お題詳細</h2>
+              <p id="detailMeta">曲一覧</p>
             </div>
-            <p id="detailMeta">曲一覧</p>
+            <div class="topic-heading-description">
+              <p id="detailDescription" class="mode-topic-summary"></p>
+            </div>
           </div>
-          <p id="detailDescription" class="detail-description"></p>
           <div class="result-actions">
             <button id="publishTopicButton" class="primary-button hidden" type="button">投稿する</button>
             <button id="detailEditButton" class="ghost-button" type="button">編集する</button>

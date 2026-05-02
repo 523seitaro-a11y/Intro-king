@@ -1309,7 +1309,7 @@ textarea {
 
 .mode-shell .genre-page-heading {
   display: grid;
-  grid-template-columns: 112px minmax(0, 1fr) auto;
+  grid-template-columns: 112px minmax(0, 1fr) minmax(280px, 0.9fr);
   align-items: center;
 }
 
@@ -1329,14 +1329,31 @@ textarea {
   object-fit: cover;
 }
 
-.mode-topic-side {
+.topic-heading-main {
   display: grid;
-  justify-items: end;
   gap: 8px;
+  min-width: 0;
+}
+
+.topic-heading-main h2,
+.topic-heading-main p {
+  margin: 0;
+}
+
+.topic-heading-main .creator-meta {
+  justify-self: start;
+}
+
+.topic-heading-main .like-button {
+  justify-self: start;
+}
+
+.topic-heading-description {
+  display: grid;
+  min-width: 0;
 }
 
 .mode-topic-summary {
-  grid-column: 2 / -1;
   margin: 0;
   color: var(--muted);
   font-size: 13px;
