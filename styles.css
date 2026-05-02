@@ -135,10 +135,12 @@ a {
   display: grid;
   width: 38px;
   height: 38px;
+  flex: 0 0 38px;
   place-items: center;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 50%;
+  padding: 0;
   background: #ffffff;
   color: var(--ink);
   font-weight: 900;
@@ -152,6 +154,11 @@ a {
   border-radius: inherit;
   object-fit: cover;
   object-position: center;
+}
+
+.icon-button img {
+  border-radius: 50%;
+  transform: scale(1.06);
 }
 
 main {
