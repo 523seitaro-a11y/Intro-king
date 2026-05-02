@@ -9,7 +9,8 @@ const defaultTopics = [];
 
 const supabaseConfig = {
   url: "https://xblylmubtrpynwgcizwl.supabase.co",
-  publishableKey: "sb_publishable_Hj6uRxvf4clbR8Lbh_6mdw_YnTd2lBN",
+  publishableKey:
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhibHlsbXVidHJweW53Z2NpendsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MjQ4NTYsImV4cCI6MjA5MzMwMDg1Nn0.Gr5PdI6Tc34HZb_mou2Fm6ViusJ2rUoZph02qGqemU8",
 };
 
 const supabaseRestUrl = `${supabaseConfig.url}/rest/v1`;
