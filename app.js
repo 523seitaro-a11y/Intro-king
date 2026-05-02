@@ -83,6 +83,7 @@ const elements = {
   topicListDescription: document.querySelector("#topicListDescription"),
   genreTopicsTitle: document.querySelector("#genreTopicsTitle"),
   genreTopicsList: document.querySelector("#genreTopicsList"),
+  topicSortTabs: document.querySelector("#topicSortTabs"),
   modeTopicImage: document.querySelector("#modeTopicImage"),
   modeTopicTitle: document.querySelector("#modeTopicTitle"),
   modeTopicDescription: document.querySelector("#modeTopicDescription"),
@@ -404,6 +405,13 @@ function bindEvents() {
       return;
     }
 
+    const topicSortButton = event.target.closest("[data-topic-sort]");
+    if (topicSortButton) {
+      state.currentTopicList.sort = topicSortButton.dataset.topicSort;
+      renderGenrePage();
+      return;
+    }
+
     const topicRow = event.target.closest("[data-topic-id]");
     if (topicRow) {
       openModeSelect(topicRow.dataset.topicId);
@@ -416,7 +424,7 @@ function bindEvents() {
         title: `${genreButton.dataset.genre}のお題`,
         eyebrow: "Genre",
         description: "ジャンル内の人気順",
-        topics: sortTopics(getPublishedTopics().filter((topic) => topic.genre === genreButton.dataset.genre), "popular"),
+        topics: getPublishedTopics().filter((topic) => topic.genre === genreButton.dataset.genre),
       });
     }
   });
@@ -507,7 +515,11 @@ function sortTopics(topics, type) {
 }
 
 function renderTopicListPage(list) {
-  state.currentTopicList = list;
+  state.currentTopicList = {
+    ...list,
+    baseTopics: list.baseTopics || list.topics || [],
+    sort: list.sort || "popular",
+  };
   route("genre");
 }
 
@@ -527,11 +539,22 @@ function renderSearchResults(text) {
 function renderGenrePage() {
   renderSharedSidebars();
   const list = state.currentTopicList;
+  const sort = list.sort || "popular";
+  const topics = sortTopics(list.baseTopics || list.topics || [], sort);
   elements.topicListEyebrow.textContent = list.eyebrow;
   elements.genreTopicsTitle.textContent = list.title;
-  elements.topicListDescription.textContent = list.description;
-  elements.genreTopicsList.innerHTML = list.topics.length
-    ? list.topics.map(topicListItem).join("")
+  elements.topicListDescription.textContent = sort === "new" ? "新着順" : "人気順";
+  elements.topicSortTabs.innerHTML = ["popular", "new"]
+    .map(
+      (type) => `
+        <button class="mode-tab ${type === sort ? "active" : ""}" data-topic-sort="${type}" type="button">
+          ${type === "popular" ? "人気順" : "新着順"}
+        </button>
+      `,
+    )
+    .join("");
+  elements.genreTopicsList.innerHTML = topics.length
+    ? topics.map(topicListItem).join("")
     : `<li class="empty-state">該当するお題がありません</li>`;
 }
 
@@ -1337,11 +1360,10 @@ function renderMyData() {
   elements.myTopicList.innerHTML = myTopics.length
     ? myTopics
         .map(
-          (topic, index) => `
+          (topic) => `
             <li>
-              <div class="topic-list-button topic-row" data-topic-id="${topic.id}">
-                <span class="topic-rank">${index + 1}</span>
-                <img class="topic-thumb" src="${escapeHtml(getTopicImage(topic))}" alt="" />
+              <div class="topic-list-button topic-row no-rank" data-topic-id="${topic.id}">
+                ${topicImageHtml(topic, "topic-thumb")}
                 <strong>${escapeHtml(topic.name)}</strong>
                 <small>${escapeHtml(topic.genre)} / ${topic.tracks.length}曲 / ♥ ${topic.likes || 0}</small>
                 <span class="status-badge ${topic.published ? "published" : "draft"}">${topic.published ? "公開中" : "非公開"}</span>
