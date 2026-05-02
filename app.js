@@ -241,7 +241,8 @@ function topicCard(topic) {
       <button class="topic-title-button" data-topic-id="${escapeHtml(topic.id)}" type="button">${escapeHtml(topic.name)}</button>
       <span>${escapeHtml(topic.genre || "未分類")} / ${topic.tracks.length}曲</span>
       <div class="topic-meta">
-        <span class="topic-stats ${liked ? "liked" : ""}">ビュー ${formatCount(topic.views || 0)}　♥ ${formatCount(topic.likes || 0)}</span>
+        <span class="topic-stat">▶ ${formatCount(topic.playCount || 0)}</span>
+        <span class="topic-stat topic-like-count ${liked ? "liked" : ""}">♥ ${formatCount(topic.likes || 0)}</span>
       </div>
     </article>
   `;
@@ -810,6 +811,7 @@ async function saveTopicFromForm(event) {
     baseLikes: existing?.baseLikes || 0,
     likes: (existing?.baseLikes || 0) + likedBy.length,
     views: existing?.views || 0,
+    playCount: existing?.playCount || 0,
     likedBy,
     published: existing?.published || false,
     tracks: state.draftTracks,
@@ -932,8 +934,6 @@ function playAnswerSound(isCorrect) {
 function openModeSelect(topicId) {
   const topic = getTopic(topicId);
   if (!topic) return;
-  topic.views = (topic.views || 0) + 1;
-  saveTopics();
   state.selectedTopic = topic;
   state.currentTopic = topic;
   state.currentMode = gameModes[1];
@@ -995,6 +995,8 @@ async function startGame(topicId, mode = state.currentMode) {
     return;
   }
 
+  topic.playCount = (topic.playCount || 0) + 1;
+  saveTopics();
   state.currentTopic = topic;
   state.currentMode = mode;
   state.rankingModeId = mode.id;

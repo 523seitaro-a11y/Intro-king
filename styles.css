@@ -600,7 +600,7 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 8px;
   margin-top: 2px;
 }
 
@@ -668,12 +668,11 @@ textarea {
   color: #d93656;
 }
 
-.topic-stats,
+.topic-stat,
 .static-like {
-  display: block;
-  width: 100%;
+  display: inline-block;
   overflow: hidden;
-  max-width: 100%;
+  max-width: 58px;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--muted);
@@ -681,7 +680,7 @@ textarea {
   font-weight: 800;
 }
 
-.topic-stats.liked {
+.topic-like-count.liked {
   color: #d93656;
 }
 
