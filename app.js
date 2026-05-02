@@ -83,7 +83,6 @@ const elements = {
   topicListDescription: document.querySelector("#topicListDescription"),
   genreTopicsTitle: document.querySelector("#genreTopicsTitle"),
   genreTopicsList: document.querySelector("#genreTopicsList"),
-  modeBackButton: document.querySelector("#modeBackButton"),
   modeTopicImage: document.querySelector("#modeTopicImage"),
   modeTopicTitle: document.querySelector("#modeTopicTitle"),
   modeTopicDescription: document.querySelector("#modeTopicDescription"),
@@ -439,7 +438,6 @@ function bindEvents() {
     state.profilePageUser = "";
     route("myData");
   });
-  elements.modeBackButton.addEventListener("click", () => route("genre"));
   elements.modeRankingButton.addEventListener("click", () => route("ranking"));
   elements.modeDetailButton.addEventListener("click", () => openTopicDetail(state.selectedTopic?.id, "mode", false));
   elements.modeHomeButton.addEventListener("click", () => route("home"));
