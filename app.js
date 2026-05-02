@@ -51,24 +51,113 @@ const baseDefaultTopics = [
 ];
 
 function createDefaultTopics() {
-  const genreSeeds = [
-    ["アニソン", "anime song"],
-    ["J-POP", "j-pop hits"],
-    ["ボカロ", "vocaloid"],
-    ["K-POP", "k-pop hits"],
-    ["ロック", "japanese rock"],
-    ["アイドル", "japanese idol"],
-    ["ゲーム音楽", "game music"],
-    ["平成ヒット", "heisei hits"],
-    ["映画・ドラマ", "japanese drama theme"],
-    ["その他", "japanese pop"],
+  const topicSeeds = [
+    ["アニソン", "鬼滅の刃 主題歌", "鬼滅の刃 主題歌"],
+    ["アニソン", "呪術廻戦 主題歌", "呪術廻戦 主題歌"],
+    ["アニソン", "SPY×FAMILY 主題歌", "SPY FAMILY 主題歌"],
+    ["アニソン", "ONE PIECE 主題歌", "ONE PIECE 主題歌"],
+    ["アニソン", "NARUTO 主題歌", "NARUTO 主題歌"],
+    ["アニソン", "進撃の巨人 主題歌", "進撃の巨人 主題歌"],
+    ["アニソン", "名探偵コナン 主題歌", "名探偵コナン 主題歌"],
+    ["アニソン", "ガンダム 主題歌", "ガンダム 主題歌"],
+    ["アニソン", "ポケモン 主題歌", "ポケモン 主題歌"],
+    ["アニソン", "エヴァンゲリオン 主題歌", "エヴァンゲリオン 主題歌"],
+    ["J-POP", "YOASOBI 名曲", "YOASOBI"],
+    ["J-POP", "Ado 名曲", "Ado"],
+    ["J-POP", "Official髭男dism 名曲", "Official髭男dism"],
+    ["J-POP", "米津玄師 名曲", "米津玄師"],
+    ["J-POP", "Mrs. GREEN APPLE 名曲", "Mrs. GREEN APPLE"],
+    ["J-POP", "King Gnu 名曲", "King Gnu"],
+    ["J-POP", "back number 名曲", "back number"],
+    ["J-POP", "あいみょん 名曲", "あいみょん"],
+    ["J-POP", "Vaundy 名曲", "Vaundy"],
+    ["J-POP", "宇多田ヒカル 名曲", "宇多田ヒカル"],
+    ["ボカロ", "初音ミク 定番", "初音ミク"],
+    ["ボカロ", "DECO*27 名曲", "DECO27"],
+    ["ボカロ", "wowaka 名曲", "wowaka"],
+    ["ボカロ", "Orangestar 名曲", "Orangestar"],
+    ["ボカロ", "Kanaria 名曲", "Kanaria"],
+    ["ボカロ", "ピノキオピー 名曲", "ピノキオピー"],
+    ["ボカロ", "kemu 名曲", "kemu"],
+    ["ボカロ", "Neru 名曲", "Neru"],
+    ["ボカロ", "じん 名曲", "じん"],
+    ["ボカロ", "バルーン 名曲", "バルーン"],
+    ["K-POP", "BTS 名曲", "BTS"],
+    ["K-POP", "BLACKPINK 名曲", "BLACKPINK"],
+    ["K-POP", "TWICE 名曲", "TWICE"],
+    ["K-POP", "NewJeans 名曲", "NewJeans"],
+    ["K-POP", "LE SSERAFIM 名曲", "LE SSERAFIM"],
+    ["K-POP", "IVE 名曲", "IVE"],
+    ["K-POP", "SEVENTEEN 名曲", "SEVENTEEN"],
+    ["K-POP", "Stray Kids 名曲", "Stray Kids"],
+    ["K-POP", "aespa 名曲", "aespa"],
+    ["K-POP", "NCT 名曲", "NCT"],
+    ["ロック", "BUMP OF CHICKEN 名曲", "BUMP OF CHICKEN"],
+    ["ロック", "RADWIMPS 名曲", "RADWIMPS"],
+    ["ロック", "ONE OK ROCK 名曲", "ONE OK ROCK"],
+    ["ロック", "ASIAN KUNG-FU GENERATION 名曲", "ASIAN KUNG-FU GENERATION"],
+    ["ロック", "ELLEGARDEN 名曲", "ELLEGARDEN"],
+    ["ロック", "サカナクション 名曲", "サカナクション"],
+    ["ロック", "ヨルシカ 名曲", "ヨルシカ"],
+    ["ロック", "ずっと真夜中でいいのに。名曲", "ずっと真夜中でいいのに"],
+    ["ロック", "UVERworld 名曲", "UVERworld"],
+    ["ロック", "LiSA 名曲", "LiSA"],
+    ["アイドル", "乃木坂46 名曲", "乃木坂46"],
+    ["アイドル", "櫻坂46 名曲", "櫻坂46"],
+    ["アイドル", "日向坂46 名曲", "日向坂46"],
+    ["アイドル", "AKB48 名曲", "AKB48"],
+    ["アイドル", "モーニング娘。名曲", "モーニング娘"],
+    ["アイドル", "ももいろクローバーZ 名曲", "ももいろクローバーZ"],
+    ["アイドル", "Snow Man 名曲", "Snow Man"],
+    ["アイドル", "SixTONES 名曲", "SixTONES"],
+    ["アイドル", "なにわ男子 名曲", "なにわ男子"],
+    ["アイドル", "King & Prince 名曲", "King & Prince"],
+    ["ゲーム音楽", "Final Fantasy 音楽", "Final Fantasy soundtrack"],
+    ["ゲーム音楽", "Dragon Quest 音楽", "Dragon Quest soundtrack"],
+    ["ゲーム音楽", "ゼルダの伝説 音楽", "Zelda soundtrack"],
+    ["ゲーム音楽", "スプラトゥーン 音楽", "Splatoon soundtrack"],
+    ["ゲーム音楽", "ペルソナ 音楽", "Persona soundtrack"],
+    ["ゲーム音楽", "NieR 音楽", "NieR soundtrack"],
+    ["ゲーム音楽", "モンスターハンター 音楽", "Monster Hunter soundtrack"],
+    ["ゲーム音楽", "星のカービィ 音楽", "Kirby soundtrack"],
+    ["ゲーム音楽", "ポケットモンスター 音楽", "Pokemon soundtrack"],
+    ["ゲーム音楽", "UNDERTALE 音楽", "UNDERTALE soundtrack"],
+    ["平成ヒット", "Mr.Children 名曲", "Mr.Children"],
+    ["平成ヒット", "スピッツ 名曲", "スピッツ"],
+    ["平成ヒット", "B'z 名曲", "B'z"],
+    ["平成ヒット", "GLAY 名曲", "GLAY"],
+    ["平成ヒット", "L'Arc-en-Ciel 名曲", "L'Arc-en-Ciel"],
+    ["平成ヒット", "浜崎あゆみ 名曲", "浜崎あゆみ"],
+    ["平成ヒット", "安室奈美恵 名曲", "安室奈美恵"],
+    ["平成ヒット", "椎名林檎 名曲", "椎名林檎"],
+    ["平成ヒット", "DREAMS COME TRUE 名曲", "DREAMS COME TRUE"],
+    ["平成ヒット", "ポルノグラフィティ 名曲", "ポルノグラフィティ"],
+    ["映画・ドラマ", "君の名は。音楽", "君の名は soundtrack"],
+    ["映画・ドラマ", "天気の子 音楽", "天気の子 soundtrack"],
+    ["映画・ドラマ", "花束みたいな恋をした 音楽", "花束みたいな恋をした"],
+    ["映画・ドラマ", "逃げるは恥だが役に立つ 主題歌", "逃げるは恥だが役に立つ 主題歌"],
+    ["映画・ドラマ", "silent 主題歌", "silent 主題歌"],
+    ["映画・ドラマ", "MIU404 主題歌", "MIU404 主題歌"],
+    ["映画・ドラマ", "アンナチュラル 主題歌", "アンナチュラル 主題歌"],
+    ["映画・ドラマ", "ブラッシュアップライフ 音楽", "ブラッシュアップライフ"],
+    ["映画・ドラマ", "コンフィデンスマンJP 主題歌", "コンフィデンスマンJP 主題歌"],
+    ["映画・ドラマ", "海猿 主題歌", "海猿 主題歌"],
+    ["その他", "ディズニー 名曲", "Disney songs"],
+    ["その他", "ジブリ 名曲", "Studio Ghibli songs"],
+    ["その他", "TikTok 人気曲", "TikTok hits"],
+    ["その他", "カラオケ定番", "karaoke hits japan"],
+    ["その他", "卒業ソング", "graduation songs japan"],
+    ["その他", "夏うた", "summer songs japan"],
+    ["その他", "冬うた", "winter songs japan"],
+    ["その他", "クリスマスソング", "christmas songs japan"],
+    ["その他", "応援ソング", "cheer songs japan"],
+    ["その他", "結婚式ソング", "wedding songs japan"],
   ];
-  const generated = Array.from({ length: 100 }, (_, index) => {
-    const [genre, seed] = genreSeeds[index % genreSeeds.length];
+  const generated = topicSeeds.map(([genre, name, seed], index) => {
     const number = index + 1;
     return {
       id: `sample-auto-${number}`,
-      name: `${genre}セレクション ${number}`,
+      name,
       genre,
       description: "仮で用意した公開お題です。曲は初回プレイ時にApple/iTunesから取得されます。",
       creator: "イントロキング",
@@ -228,6 +317,7 @@ const elements = {
   resultTopic: document.querySelector("#resultTopic"),
   finalTime: document.querySelector("#finalTime"),
   resultRankText: document.querySelector("#resultRankText"),
+  resultLikeButton: document.querySelector("#resultLikeButton"),
   viewRankingButton: document.querySelector("#viewRankingButton"),
   postResultButton: document.querySelector("#postResultButton"),
   retryButton: document.querySelector("#retryButton"),
@@ -262,8 +352,24 @@ function loadTopics() {
   try {
     const saved = JSON.parse(localStorage.getItem("introKingTopics") || "[]");
     if (saved.length) {
-      const savedIds = new Set(saved.map((topic) => topic.id));
-      state.topics = [...saved, ...defaultTopics.filter((topic) => !savedIds.has(topic.id))];
+      const defaultTopicMap = new Map(defaultTopics.map((topic) => [topic.id, topic]));
+      const normalizedSaved = saved.map((topic) => {
+        const defaultTopic = defaultTopicMap.get(topic.id);
+        if (!defaultTopic) return topic;
+        return {
+          ...topic,
+          name: defaultTopic.name,
+          genre: defaultTopic.genre,
+          description: defaultTopic.description,
+          creator: defaultTopic.creator,
+          seedQuery: defaultTopic.seedQuery,
+          baseLikes: defaultTopic.baseLikes,
+          likes: defaultTopic.baseLikes + (topic.likedBy?.length || 0),
+          published: true,
+        };
+      });
+      const savedIds = new Set(normalizedSaved.map((topic) => topic.id));
+      state.topics = [...normalizedSaved, ...defaultTopics.filter((topic) => !savedIds.has(topic.id))];
     } else {
       state.topics = defaultTopics;
     }
@@ -308,13 +414,12 @@ function topicCard(topic) {
   return `
     <article class="topic-card topic-card-action">
       <button class="topic-image-button" data-topic-id="${escapeHtml(topic.id)}" type="button" aria-label="${escapeHtml(topic.name)}を開く">
-        <img src="${escapeHtml(getTopicImage(topic))}" alt="" />
+        ${topicImageHtml(topic)}
       </button>
       <button class="topic-title-button" data-topic-id="${escapeHtml(topic.id)}" type="button">${escapeHtml(topic.name)}</button>
       <span>${escapeHtml(topic.genre || "未分類")} / ${topic.tracks.length}曲</span>
       <div class="topic-meta">
-        <button class="like-button ${liked ? "liked" : ""}" data-like-topic="${escapeHtml(topic.id)}" type="button" aria-label="いいね">♥ ${topic.likes || 0}</button>
-        ${creatorButton(topic)}
+        <span class="like-button static-like ${liked ? "liked" : ""}">♥ ${topic.likes || 0}</span>
       </div>
     </article>
   `;
@@ -325,7 +430,7 @@ function topicListItem(topic, index) {
   return `
     <li>
       <div class="topic-list-button topic-row no-rank" data-topic-id="${escapeHtml(topic.id)}">
-        <img class="topic-thumb" src="${escapeHtml(getTopicImage(topic))}" alt="" />
+        ${topicImageHtml(topic, "topic-thumb")}
         <strong>${escapeHtml(topic.name)}</strong>
         <small>${escapeHtml(topic.genre || "未分類")} / ${topic.tracks.length}曲 / ♥ ${topic.likes || 0}</small>
         ${creatorButton(topic)}
@@ -344,7 +449,13 @@ function isTopicLiked(topic) {
 }
 
 function getTopicImage(topic) {
-  return topic?.image || (topic?.tracks?.[0]?.artworkUrl100 ? largerArtwork(topic.tracks[0].artworkUrl100) : defaultTopicImage);
+  return topic?.image || (topic?.tracks?.[0]?.artworkUrl100 ? largerArtwork(topic.tracks[0].artworkUrl100) : "");
+}
+
+function topicImageHtml(topic, className = "") {
+  const image = getTopicImage(topic);
+  if (image) return `<img class="${className}" src="${escapeHtml(image)}" alt="" />`;
+  return `<span class="topic-image-placeholder ${className}"></span>`;
 }
 
 function creatorButton(topic, withName = false) {
@@ -404,6 +515,32 @@ function bindEvents() {
       return;
     }
 
+    const homeListButton = event.target.closest("[data-home-list]");
+    if (homeListButton) {
+      const lists = {
+        standard: {
+          title: "定番",
+          eyebrow: "Standard",
+          description: "イントロキング定番お題",
+          topics: getStandardTopics(),
+        },
+        popular: {
+          title: "急上昇",
+          eyebrow: "Trending",
+          description: "いいねが多い順",
+          topics: getPopularTopics(),
+        },
+        new: {
+          title: "新着",
+          eyebrow: "New topics",
+          description: "追加された順",
+          topics: getNewTopics(),
+        },
+      };
+      renderTopicListPage(lists[homeListButton.dataset.homeList]);
+      return;
+    }
+
     const imageButton = event.target.closest("[data-topic-image]");
     if (imageButton) {
       event.preventDefault();
@@ -454,33 +591,6 @@ function bindEvents() {
     }
   });
 
-  elements.popularListButton.addEventListener("click", () => {
-    renderTopicListPage({
-      title: "人気のお題",
-      eyebrow: "Popular topics",
-      description: "いいねが多い投稿お題",
-      topics: getPopularTopics(),
-    });
-  });
-
-  elements.genreListButton.addEventListener("click", () => {
-    renderTopicListPage({
-      title: "ジャンル",
-      eyebrow: "Genres",
-      description: "ジャンルごとの人気お題",
-      topics: sortTopics(getPublishedTopics(), "popular"),
-    });
-  });
-
-  elements.newListButton.addEventListener("click", () => {
-    renderTopicListPage({
-      title: "新着",
-      eyebrow: "New topics",
-      description: "追加された順",
-      topics: getNewTopics(),
-    });
-  });
-
   elements.topSearchForm.addEventListener("submit", (event) => {
     event.preventDefault();
     renderSearchResults(elements.topSearchInput.value.trim());
@@ -510,6 +620,7 @@ function bindEvents() {
   elements.detailEditButton.addEventListener("click", () => openCreateView(state.detailTopicId));
   elements.backHomeButton.addEventListener("click", () => route("home"));
   elements.viewRankingButton.addEventListener("click", () => route("ranking"));
+  elements.resultLikeButton.addEventListener("click", () => likeTopic(state.lastEntry?.topicId));
   elements.postResultButton.addEventListener("click", postResult);
   elements.retryButton.addEventListener("click", retryLastTopic);
   elements.resultHomeButton.addEventListener("click", () => route("home"));
@@ -610,6 +721,7 @@ function likeTopic(topicId) {
   renderHome();
   if (window.location.hash === "#genre") renderGenrePage();
   if (window.location.hash === "#mode") renderModeSelect();
+  if (window.location.hash === "#result") renderResult();
 }
 
 function openUserPage(userName) {
@@ -872,7 +984,7 @@ async function saveTopicFromForm(event) {
 function getSelectedTopicImage(existing) {
   if (elements.topicImageInput.value) return elements.topicImageInput.value;
   if (state.draftTracks[0]?.artworkUrl100) return largerArtwork(state.draftTracks[0].artworkUrl100);
-  return existing?.image || defaultTopicImage;
+  return existing?.image || "";
 }
 
 function normalizeTrack(track) {
@@ -1251,6 +1363,10 @@ function renderResult() {
   elements.resultMeta.textContent = `${entry.modeLabel} / 正解数 ${entry.correctCount} / ${entry.totalQuestions}`;
   elements.resultRankText.textContent =
     rank > 0 ? `${entry.topic} / ${entry.modeLabel} の ${rank}位に入りました。` : "全問正解ではないためランキングには記録されません。";
+  const topic = getTopic(entry.topicId);
+  const liked = isTopicLiked(topic);
+  elements.resultLikeButton.classList.toggle("liked", liked);
+  elements.resultLikeButton.textContent = `♥ ${topic?.likes || 0}`;
 }
 
 function postResult() {

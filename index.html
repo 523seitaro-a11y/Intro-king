@@ -40,21 +40,21 @@
           <div class="home-feed">
             <section class="feed-section">
               <div class="feed-heading">
-                <span>定番</span>
+                <button class="heading-link" data-home-list="standard" type="button">定番</button>
               </div>
               <div id="standardGrid" class="topic-grid feed-grid"></div>
             </section>
 
             <section class="feed-section">
               <div class="feed-heading">
-                <span>急上昇</span>
+                <button class="heading-link" data-home-list="popular" type="button">急上昇</button>
               </div>
               <div id="popularGrid" class="topic-grid feed-grid"></div>
             </section>
 
             <section class="feed-section">
               <div class="feed-heading">
-                <button id="newListButton" class="heading-link" type="button">新着</button>
+                <button id="newListButton" class="heading-link" data-home-list="new" type="button">新着</button>
               </div>
               <div id="newGrid" class="topic-grid feed-grid"></div>
             </section>
@@ -237,6 +237,7 @@
           </div>
           <p id="resultRankText" class="muted">ランキングに記録しました。</p>
           <div class="result-actions">
+            <button id="resultLikeButton" class="like-button result-like-button" type="button">♥ 0</button>
             <button id="viewRankingButton" class="primary-button" type="button">ランキングを確認</button>
             <button id="postResultButton" class="ghost-button" type="button">ポスト</button>
             <button id="retryButton" class="ghost-button" type="button">もう一度</button>

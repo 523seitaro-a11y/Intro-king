@@ -254,13 +254,13 @@ body.create-mode .topbar {
 
 .home-feed {
   display: grid;
-  gap: 26px;
+  gap: 44px;
   width: 100%;
 }
 
 .feed-section {
   display: grid;
-  gap: 12px;
+  gap: 16px;
 }
 
 .feed-heading {
@@ -284,7 +284,12 @@ body.create-mode .topbar {
 }
 
 .feed-grid {
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-auto-columns: 126px;
+  grid-auto-flow: column;
+  grid-template-columns: none;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-padding-inline: 2px;
 }
 
 .hero {
@@ -544,21 +549,21 @@ textarea {
 .topic-card strong,
 .topic-title-button {
   align-self: start;
-  font-size: 16px;
+  font-size: 13px;
   line-height: 1.35;
 }
 
 .topic-card span {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .topic-meta {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: 2px;
 }
 
 .topic-image-button {
@@ -580,8 +585,25 @@ textarea {
   transition: filter 0.16s ease;
 }
 
-.topic-image-button:hover img {
+.topic-image-button:hover img,
+.topic-image-button:hover .topic-image-placeholder {
   filter: brightness(0.82);
+}
+
+.topic-image-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(135deg, rgba(171, 232, 219, 0.42), rgba(42, 52, 85, 0.08)),
+    #ffffff;
+}
+
+.topic-image-placeholder.topic-thumb {
+  width: 52px;
+  height: 42px;
+  border-radius: 6px;
 }
 
 .like-button {
@@ -601,6 +623,16 @@ textarea {
 
 .like-button.liked {
   color: #d93656;
+}
+
+.static-like {
+  pointer-events: none;
+}
+
+.result-like-button {
+  min-height: 40px;
+  padding: 0 8px;
+  font-size: 20px;
 }
 
 .creator-button {
