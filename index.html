@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>イントロキング</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="イントロキング ホーム">
+        <span class="brand-mark">王</span>
+        <span>イントロキング</span>
+      </a>
+      <form id="topSearchForm" class="top-search" role="search">
+        <input id="topSearchInput" type="search" placeholder="お題を検索" aria-label="お題を検索" />
+        <button type="submit">検索</button>
+      </form>
+      <div class="top-actions">
+        <button id="myDataButton" class="icon-button" type="button" aria-label="マイページ">人</button>
+        <button id="createTopicButton" class="primary-button" type="button">お題作成</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="homeView" class="view active">
+        <div class="home-layout">
+          <aside class="home-sidebar">
+            <div class="sidebar-block">
+              <button id="popularListButton" class="sidebar-title" type="button">人気のお題</button>
+              <div id="sidebarPopularList" class="sidebar-list"></div>
+            </div>
+            <div class="sidebar-block">
+              <button id="genreListButton" class="sidebar-title" type="button">ジャンル</button>
+              <div id="genreGrid" class="sidebar-list"></div>
+            </div>
+          </aside>
+
+          <div class="home-feed">
+            <section class="feed-section">
+              <div class="feed-heading">
+                <button id="newListButton" class="heading-link" type="button">新着</button>
+              </div>
+              <div id="newGrid" class="topic-grid feed-grid"></div>
+            </section>
+
+            <section class="feed-section">
+              <div class="feed-heading">
+                <span>人気</span>
+              </div>
+              <div id="popularGrid" class="topic-grid feed-grid"></div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="genreView" class="view">
+        <div class="genre-page-shell">
+          <button id="genreBackButton" class="ghost-button" type="button">ホームへ</button>
+          <div class="section-heading genre-page-heading">
+            <div>
+              <p id="topicListEyebrow" class="eyebrow">Genre ranking</p>
+              <h2 id="genreTopicsTitle">お題一覧</h2>
+            </div>
+            <p id="topicListDescription">人気順</p>
+          </div>
+          <ol id="genreTopicsList" class="topic-list"></ol>
+        </div>
+      </section>
+
+      <section id="modeView" class="view">
+        <div class="mode-shell">
+          <button id="modeBackButton" class="ghost-button" type="button">お題一覧へ</button>
+          <div class="section-heading genre-page-heading">
+            <div>
+              <p class="eyebrow">Mode select</p>
+              <h2 id="modeTopicTitle">お題</h2>
+            </div>
+            <div class="mode-topic-side">
+              <div id="modeCreatorMeta" class="creator-meta"></div>
+              <p id="modeTopicDescription">モードを選択</p>
+              <button id="modeLikeButton" class="like-button" type="button">いいね</button>
+            </div>
+          </div>
+          <div id="modeGrid" class="mode-grid"></div>
+          <div class="result-actions">
+            <button id="modeRankingButton" class="primary-button" type="button">ランキングを見る</button>
+            <button id="modeDetailButton" class="ghost-button" type="button">曲一覧を見る</button>
+            <button id="modeHomeButton" class="ghost-button" type="button">タイトルに戻る</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="topicDetailView" class="view">
+        <div class="detail-shell">
+          <button id="detailBackButton" class="ghost-button" type="button">戻る</button>
+          <div class="section-heading genre-page-heading">
+            <div>
+              <p id="detailEyebrow" class="eyebrow">Topic detail</p>
+              <h2 id="detailTitle">お題詳細</h2>
+            </div>
+            <p id="detailMeta">曲一覧</p>
+          </div>
+          <p id="detailDescription" class="detail-description"></p>
+          <div class="result-actions">
+            <button id="publishTopicButton" class="primary-button hidden" type="button">投稿する</button>
+            <button id="detailEditButton" class="ghost-button" type="button">編集する</button>
+          </div>
+          <ol id="detailTrackList" class="track-list"></ol>
+        </div>
+      </section>
+
+      <section id="createView" class="view">
+        <div class="create-shell">
+          <div class="section-heading genre-page-heading">
+            <div>
+              <p class="eyebrow">Create topic</p>
+              <h2 id="createTitle">お題作成</h2>
+            </div>
+            <p>音楽を検索して曲を追加</p>
+          </div>
+
+          <form id="topicForm" class="creator-panel topic-detail-panel">
+            <div class="topic-detail-grid">
+              <div class="topic-basic-fields">
+                <div>
+                  <label for="topicNameInput">お題名</label>
+                  <input id="topicNameInput" required maxlength="40" placeholder="例: 令和アニソン名曲" />
+                </div>
+
+                <div>
+                  <label for="topicGenreInput">ジャンル</label>
+                  <select id="topicGenreInput" required></select>
+                </div>
+              </div>
+
+              <div>
+              <label for="topicDescriptionInput">説明</label>
+              <textarea id="topicDescriptionInput" maxlength="1000" rows="5" placeholder="例: 2019年以降のアニメ主題歌"></textarea>
+              </div>
+            </div>
+
+            <div class="dialog-actions">
+              <button id="aiCreateButton" class="ghost-button" type="button">AIで作成</button>
+              <button id="unpublishTopicButton" class="ghost-button danger hidden" type="button">公開停止</button>
+              <button id="cancelEditButton" class="ghost-button hidden" type="button">編集をやめる</button>
+              <button class="primary-button" type="submit">保存</button>
+            </div>
+          </form>
+
+          <div class="create-layout">
+            <div class="creator-panel">
+              <div class="section-heading">
+                <h2>現在入っている曲</h2>
+                <p id="selectedTrackCount">0曲</p>
+              </div>
+              <ol id="selectedTrackList" class="track-list"></ol>
+            </div>
+
+            <div class="creator-panel">
+              <div class="section-heading">
+                <h2>曲を検索・追加</h2>
+                <p>Apple/iTunes試聴音源</p>
+              </div>
+              <form id="musicSearchForm" class="search-row">
+                <input id="musicSearchInput" type="search" placeholder="曲・アーティストを検索" />
+                <button type="submit">検索</button>
+              </form>
+              <div id="musicSearchResults" class="music-results"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="gameView" class="view">
+        <div class="game-shell">
+          <div class="game-status">
+            <button id="backHomeButton" class="ghost-button" type="button">ホームへ</button>
+            <div>
+              <p id="gameTopic" class="eyebrow"></p>
+              <h2 id="questionProgress">1 / 10</h2>
+            </div>
+            <div class="timer">
+              <span id="timerValue">0.00</span>
+              <small>sec</small>
+            </div>
+          </div>
+
+          <div class="track-card">
+            <img id="artwork" alt="" />
+            <div>
+              <p class="muted">再生ボタンを押すと計測開始</p>
+              <h3 id="resultTitle">この曲は？</h3>
+              <p id="resultMeta">10問の合計タイムでランキングします。</p>
+            </div>
+          </div>
+
+          <div class="play-row">
+            <button id="playButton" class="primary-button" type="button">再生</button>
+            <button id="nextButton" class="ghost-button hidden" type="button">次の問題</button>
+          </div>
+
+          <div id="choices" class="choice-grid"></div>
+        </div>
+      </section>
+
+      <section id="resultView" class="view">
+        <div class="result-shell">
+          <p id="resultTopic" class="eyebrow"></p>
+          <h2>記録</h2>
+          <div class="result-score">
+            <span id="finalTime">0.00</span>
+            <small>秒</small>
+          </div>
+          <p id="resultRankText" class="muted">ランキングに記録しました。</p>
+          <div class="result-actions">
+            <button id="viewRankingButton" class="primary-button" type="button">ランキングを確認</button>
+            <button id="postResultButton" class="ghost-button" type="button">ポスト</button>
+            <button id="retryButton" class="ghost-button" type="button">もう一度</button>
+            <button id="resultHomeButton" class="ghost-button" type="button">タイトルに戻る</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="rankingView" class="view">
+        <div class="ranking-shell">
+          <div class="section-heading">
+            <h2 id="rankingTitle">ランキング</h2>
+            <p id="rankingDescription">お題ごとのベストタイム</p>
+          </div>
+          <div id="rankingModeTabs" class="mode-tabs"></div>
+          <ol id="rankingList" class="ranking-list"></ol>
+          <button id="clearRankingButton" class="ghost-button danger" type="button">ランキングを削除</button>
+        </div>
+      </section>
+
+      <section id="myDataView" class="view">
+        <div class="mypage-layout">
+          <aside class="mypage-sidebar">
+            <div class="user-card">
+              <span id="mypageAvatar" class="user-avatar">?</span>
+              <strong id="mypageName">ゲスト</strong>
+              <small id="mypageInfo">ログインすると記録を表示</small>
+            </div>
+            <div class="mypage-sidebar-stats">
+              <div><span id="mypageSidePlays">0</span><small>プレイ</small></div>
+              <div><span id="mypageSideBest">--</span><small>ベスト</small></div>
+              <div><span id="mypageSideTop">0</span><small>1位記録</small></div>
+              <div><span id="mypageSideTopics">0</span><small>作成お題</small></div>
+            </div>
+          </aside>
+
+          <div class="my-data-shell">
+            <section id="mypageRecords" class="mypage-section">
+              <div class="section-heading">
+                <div>
+                  <h2 id="myPageTitle">ゲスト</h2>
+                </div>
+                <p id="myDataPlayer" class="hidden"></p>
+              </div>
+              <form id="profileForm" class="profile-form">
+                <label for="profileImageInput">画像</label>
+                <input id="profileImageInput" type="file" accept="image/*" />
+                <label for="profileIconInput">アイコン</label>
+                <input id="profileIconInput" maxlength="2" placeholder="例: 王" />
+                <label for="profileNameInput">ユーザー名</label>
+                <input id="profileNameInput" maxlength="24" placeholder="例: intro_master" />
+                <button class="primary-button" type="submit">保存</button>
+              </form>
+              <div class="data-summary">
+                <div>
+                  <span id="myTotalPlays">0</span>
+                  <small>プレイ数</small>
+                </div>
+                <div>
+                  <span id="myBestTime">--</span>
+                  <small>ベスト</small>
+                </div>
+                <div>
+                  <span id="myTopCount">0</span>
+                  <small>1位記録</small>
+                </div>
+              </div>
+              <div class="section-heading compact-heading">
+                <h2>今までの記録</h2>
+                <p>お題別ランキングの自己ベスト</p>
+              </div>
+              <ol id="myDataList" class="ranking-list"></ol>
+            </section>
+
+            <section id="mypageTopics" class="mypage-section">
+              <div class="section-heading compact-heading">
+                <h2>作成したお題</h2>
+                <p>作成・編集したお題</p>
+              </div>
+              <ol id="myTopicList" class="topic-list"></ol>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      Preview audio and artwork provided courtesy of iTunes. Tracks link back to Apple/iTunes after each answer.
+    </footer>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
