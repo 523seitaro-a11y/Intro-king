@@ -146,8 +146,13 @@ const elements = {
   topicNameInput: document.querySelector("#topicNameInput"),
   topicGenreInput: document.querySelector("#topicGenreInput"),
   topicImageInput: document.querySelector("#topicImageInput"),
+  topicImageChoices: document.querySelector("#topicImageChoices"),
   topicDescriptionInput: document.querySelector("#topicDescriptionInput"),
   unpublishTopicButton: document.querySelector("#unpublishTopicButton"),
+  deleteTopicButton: document.querySelector("#deleteTopicButton"),
+  deleteTopicDialog: document.querySelector("#deleteTopicDialog"),
+  deleteTopicNoButton: document.querySelector("#deleteTopicNoButton"),
+  deleteTopicYesButton: document.querySelector("#deleteTopicYesButton"),
   cancelEditButton: document.querySelector("#cancelEditButton"),
   musicSearchForm: document.querySelector("#musicSearchForm"),
   musicSearchInput: document.querySelector("#musicSearchInput"),
@@ -328,6 +333,13 @@ function bindEvents() {
       return;
     }
 
+    const imageButton = event.target.closest("[data-topic-image]");
+    if (imageButton) {
+      event.preventDefault();
+      setTopicImage(imageButton.dataset.topicImage);
+      return;
+    }
+
     const editButton = event.target.closest("[data-edit-topic]");
     if (editButton) {
       event.stopPropagation();
@@ -435,6 +447,9 @@ function bindEvents() {
 
   elements.topicForm.addEventListener("submit", saveTopicFromForm);
   elements.unpublishTopicButton.addEventListener("click", unpublishEditingTopic);
+  elements.deleteTopicButton.addEventListener("click", () => elements.deleteTopicDialog.showModal());
+  elements.deleteTopicNoButton.addEventListener("click", () => elements.deleteTopicDialog.close());
+  elements.deleteTopicYesButton.addEventListener("click", deleteEditingTopic);
   elements.cancelEditButton.addEventListener("click", () => (state.editingTopicId ? openCreateView() : route("home")));
   elements.musicSearchForm.addEventListener("submit", searchMusicForTopic);
   elements.musicSearchInput.addEventListener("input", renderMusicSuggestions);
@@ -548,13 +563,15 @@ function openCreateView(topicId = "") {
   state.draftTracks = topic ? [...topic.tracks] : [];
   elements.createTitle.textContent = topic ? "お題編集" : "お題作成";
   elements.topicNameInput.value = topic?.name || "";
-  elements.topicImageInput.value = "";
+  elements.topicImageInput.value = topic?.image || "";
   elements.topicDescriptionInput.value = topic?.description || "";
   elements.musicSearchInput.value = "";
   elements.musicSearchResults.innerHTML = "";
   elements.unpublishTopicButton.classList.toggle("hidden", !topic?.published);
+  elements.deleteTopicButton.classList.toggle("hidden", !topic);
   elements.cancelEditButton.textContent = topic ? "編集をやめる" : "ホームへ";
   renderDraftTracks();
+  renderTopicImageChoices();
   renderMusicSuggestions();
   route("create");
 }
@@ -648,6 +665,37 @@ function renderDraftTracks() {
   elements.selectedTrackList.innerHTML = state.draftTracks.length
     ? state.draftTracks.map(selectedTrackItem).join("")
     : `<li class="empty-state">曲を検索して追加してください</li>`;
+  renderTopicImageChoices();
+}
+
+function renderTopicImageChoices() {
+  const options = getTopicImageOptions();
+  const selected = elements.topicImageInput.value || (state.draftTracks[0]?.artworkUrl100 ? largerArtwork(state.draftTracks[0].artworkUrl100) : defaultTopicImage);
+  elements.topicImageChoices.innerHTML = options
+    .map(
+      (option) => `
+        <button class="${option.value === selected ? "active" : ""}" data-topic-image="${escapeHtml(option.value)}" type="button">
+          <img src="${escapeHtml(option.value)}" alt="" />
+          <span>${escapeHtml(option.label)}</span>
+        </button>
+      `,
+    )
+    .join("");
+}
+
+function getTopicImageOptions() {
+  const albumOptions = uniqueTracks(state.draftTracks)
+    .slice(0, 12)
+    .map((track, index) => ({
+      label: `${index + 1}. ${track.trackName}`,
+      value: largerArtwork(track.artworkUrl100),
+    }));
+  return [{ label: "運営画像", value: defaultTopicImage }, ...albumOptions];
+}
+
+function setTopicImage(value) {
+  elements.topicImageInput.value = value;
+  renderTopicImageChoices();
 }
 
 function selectedTrackItem(track) {
@@ -698,7 +746,7 @@ async function saveTopicFromForm(event) {
 
   const existing = state.editingTopicId ? getTopic(state.editingTopicId) : null;
   const likedBy = existing?.likedBy || [];
-  const topicImage = await getSelectedTopicImage(existing);
+  const topicImage = getSelectedTopicImage(existing);
   const topic = {
     id: existing?.id || `topic-${Date.now()}`,
     name: elements.topicNameInput.value.trim(),
@@ -728,14 +776,9 @@ async function saveTopicFromForm(event) {
 }
 
 function getSelectedTopicImage(existing) {
-  const file = elements.topicImageInput.files?.[0];
-  if (!file) return Promise.resolve(existing?.image || defaultTopicImage);
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => resolve(String(reader.result || defaultTopicImage)));
-    reader.addEventListener("error", () => resolve(existing?.image || defaultTopicImage));
-    reader.readAsDataURL(file);
-  });
+  if (elements.topicImageInput.value) return elements.topicImageInput.value;
+  if (state.draftTracks[0]?.artworkUrl100) return largerArtwork(state.draftTracks[0].artworkUrl100);
+  return existing?.image || defaultTopicImage;
 }
 
 function normalizeTrack(track) {
@@ -805,6 +848,17 @@ function unpublishEditingTopic() {
   renderHome();
   elements.unpublishTopicButton.classList.add("hidden");
   showToast("お題を公開停止しました。");
+}
+
+function deleteEditingTopic() {
+  const topic = getTopic(state.editingTopicId);
+  if (!topic) return;
+  state.topics = state.topics.filter((item) => item.id !== topic.id);
+  saveTopics();
+  elements.deleteTopicDialog.close();
+  renderHome();
+  showToast("お題を削除しました。");
+  route("myData");
 }
 
 function playPreviewTrack(previewUrl) {

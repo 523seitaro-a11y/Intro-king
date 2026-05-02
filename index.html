@@ -132,7 +132,8 @@
 
                 <div>
                   <label for="topicImageInput">お題画像</label>
-                  <input id="topicImageInput" type="file" accept="image/*" />
+                  <input id="topicImageInput" type="hidden" />
+                  <div id="topicImageChoices" class="topic-image-choices"></div>
                 </div>
               </div>
 
@@ -143,6 +144,7 @@
               <div class="create-sidebar-actions">
                 <button class="primary-button" type="submit">保存</button>
                 <button id="unpublishTopicButton" class="ghost-button danger hidden" type="button">公開停止</button>
+                <button id="deleteTopicButton" class="ghost-button danger hidden" type="button">お題を削除</button>
                 <button id="cancelEditButton" class="ghost-button" type="button">戻る</button>
               </div>
             </form>
@@ -337,6 +339,17 @@
         <div class="dialog-actions">
           <button id="loginCancelButton" class="ghost-button" type="button">キャンセル</button>
           <button class="primary-button" type="submit">ログイン</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="deleteTopicDialog" class="login-dialog">
+      <form method="dialog">
+        <h2>お題を削除</h2>
+        <p>本当に良いですか</p>
+        <div class="dialog-actions">
+          <button id="deleteTopicNoButton" class="ghost-button" type="button">いいえ</button>
+          <button id="deleteTopicYesButton" class="primary-button danger" type="button">はい</button>
         </div>
       </form>
     </dialog>
