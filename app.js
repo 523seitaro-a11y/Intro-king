@@ -64,6 +64,7 @@ const topicGenreOptions = [
 ];
 
 const maxTopicTracks = 500;
+const defaultTopicImage = "assets/default-topic.png";
 
 const state = {
   player: localStorage.getItem("introKingPlayer") || localStorage.getItem("introBeatPlayer") || "",
@@ -143,6 +144,7 @@ const elements = {
   topicForm: document.querySelector("#topicForm"),
   topicNameInput: document.querySelector("#topicNameInput"),
   topicGenreInput: document.querySelector("#topicGenreInput"),
+  topicImageInput: document.querySelector("#topicImageInput"),
   topicDescriptionInput: document.querySelector("#topicDescriptionInput"),
   unpublishTopicButton: document.querySelector("#unpublishTopicButton"),
   cancelEditButton: document.querySelector("#cancelEditButton"),
@@ -232,8 +234,11 @@ function renderHome() {
 function topicCard(topic) {
   const liked = isTopicLiked(topic);
   return `
-    <article class="topic-card topic-card-action" data-topic-id="${escapeHtml(topic.id)}">
-      <strong>${escapeHtml(topic.name)}</strong>
+    <article class="topic-card topic-card-action">
+      <button class="topic-image-button" data-topic-id="${escapeHtml(topic.id)}" type="button" aria-label="${escapeHtml(topic.name)}を開く">
+        <img src="${escapeHtml(getTopicImage(topic))}" alt="" />
+      </button>
+      <button class="topic-title-button" data-topic-id="${escapeHtml(topic.id)}" type="button">${escapeHtml(topic.name)}</button>
       <span>${escapeHtml(topic.genre || "未分類")} / ${topic.tracks.length}曲</span>
       <div class="topic-meta">
         <button class="like-button ${liked ? "liked" : ""}" data-like-topic="${escapeHtml(topic.id)}" type="button" aria-label="いいね">♥ ${topic.likes || 0}</button>
@@ -249,6 +254,7 @@ function topicListItem(topic, index) {
     <li>
       <div class="topic-list-button topic-row" data-topic-id="${escapeHtml(topic.id)}">
         <span class="topic-rank">${index + 1}</span>
+        <img class="topic-thumb" src="${escapeHtml(getTopicImage(topic))}" alt="" />
         <strong>${escapeHtml(topic.name)}</strong>
         <small>${escapeHtml(topic.genre || "未分類")} / ${topic.tracks.length}曲 / ♥ ${topic.likes || 0}</small>
         ${creatorButton(topic)}
@@ -264,6 +270,10 @@ function emptyCard(text) {
 
 function isTopicLiked(topic) {
   return Boolean(topic?.likedBy?.includes(state.player || "guest"));
+}
+
+function getTopicImage(topic) {
+  return topic?.image || defaultTopicImage;
 }
 
 function creatorButton(topic, withName = false) {
@@ -507,6 +517,7 @@ function openCreateView(topicId = "") {
   state.draftTracks = topic ? [...topic.tracks] : [];
   elements.createTitle.textContent = topic ? "お題編集" : "お題作成";
   elements.topicNameInput.value = topic?.name || "";
+  elements.topicImageInput.value = "";
   elements.topicDescriptionInput.value = topic?.description || "";
   elements.musicSearchInput.value = "";
   elements.musicSearchResults.innerHTML = "";
@@ -627,7 +638,7 @@ function detailTrackItem(track, index) {
   `;
 }
 
-function saveTopicFromForm(event) {
+async function saveTopicFromForm(event) {
   event.preventDefault();
   if (!state.player) {
     showToast("お題作成にはログインが必要です。");
@@ -648,10 +659,12 @@ function saveTopicFromForm(event) {
 
   const existing = state.editingTopicId ? getTopic(state.editingTopicId) : null;
   const likedBy = existing?.likedBy || [];
+  const topicImage = await getSelectedTopicImage(existing);
   const topic = {
     id: existing?.id || `topic-${Date.now()}`,
     name: elements.topicNameInput.value.trim(),
     genre: elements.topicGenreInput.value.trim() || "未分類",
+    image: topicImage,
     description: elements.topicDescriptionInput.value.trim(),
     creator: existing?.creator || state.player,
     creatorIcon: existing?.creator === state.player || !existing ? state.profileIcon : existing?.creatorIcon || "",
@@ -673,6 +686,17 @@ function saveTopicFromForm(event) {
   saveTopics();
   renderHome();
   openTopicDetail(topic.id, "create", true);
+}
+
+function getSelectedTopicImage(existing) {
+  const file = elements.topicImageInput.files?.[0];
+  if (!file) return Promise.resolve(existing?.image || defaultTopicImage);
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => resolve(String(reader.result || defaultTopicImage)));
+    reader.addEventListener("error", () => resolve(existing?.image || defaultTopicImage));
+    reader.readAsDataURL(file);
+  });
 }
 
 function normalizeTrack(track) {
@@ -1141,6 +1165,7 @@ function renderMyData() {
             <li>
               <div class="topic-list-button topic-row" data-topic-id="${topic.id}">
                 <span class="topic-rank">${index + 1}</span>
+                <img class="topic-thumb" src="${escapeHtml(getTopicImage(topic))}" alt="" />
                 <strong>${escapeHtml(topic.name)}</strong>
                 <small>${escapeHtml(topic.genre)} / ${topic.tracks.length}曲 / ♥ ${topic.likes || 0}</small>
                 <span class="status-badge ${topic.published ? "published" : "draft"}">${topic.published ? "公開中" : "非公開"}</span>
