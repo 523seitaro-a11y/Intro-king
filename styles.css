@@ -293,7 +293,8 @@ body.create-mode .topbar {
 .feed-grid {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  justify-content: flex-start;
+  gap: 8px;
   max-height: 232px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -1472,13 +1473,15 @@ textarea {
 }
 
 .choice-button.correct {
-  border-color: var(--green);
-  background: rgba(244, 177, 184, 0.42);
+  border-color: #138a36;
+  background: rgba(36, 180, 84, 0.18);
+  color: #0f5f29;
 }
 
 .choice-button.wrong {
-  border-color: var(--red);
-  background: rgba(184, 100, 100, 0.14);
+  border-color: #d93636;
+  background: rgba(217, 54, 54, 0.16);
+  color: #9f1f1f;
 }
 
 .choice-button:disabled {
