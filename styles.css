@@ -902,7 +902,7 @@ textarea {
 
 .topic-image-choices {
   display: grid;
-  gap: 12px;
+  gap: 18px;
 }
 
 .topic-image-group {
@@ -917,12 +917,13 @@ textarea {
 
 .topic-image-list {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 8px;
 }
 
 .topic-image-list button {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-columns: 1fr;
   gap: 8px;
   align-items: center;
   border: 1px solid var(--line);
@@ -939,8 +940,9 @@ textarea {
 }
 
 .topic-image-list img {
-  width: 44px;
-  height: 32px;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  height: auto;
   border-radius: 4px;
   object-fit: cover;
 }
@@ -953,6 +955,47 @@ textarea {
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.topic-image-picker-button {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px;
+  background: var(--panel);
+  color: var(--ink);
+  text-align: left;
+}
+
+.topic-image-picker-button img {
+  width: 56px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.topic-image-dialog {
+  width: min(860px, calc(100vw - 32px));
+  max-height: min(720px, calc(100vh - 48px));
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0;
+}
+
+.topic-image-dialog::backdrop {
+  background: rgba(47, 85, 109, 0.34);
+}
+
+.topic-image-dialog-inner {
+  display: grid;
+  gap: 14px;
+  max-height: inherit;
+  overflow-y: auto;
+  padding: 22px;
 }
 
 .creator-panel {

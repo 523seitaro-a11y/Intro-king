@@ -146,6 +146,10 @@ const elements = {
   topicNameInput: document.querySelector("#topicNameInput"),
   topicGenreInput: document.querySelector("#topicGenreInput"),
   topicImageInput: document.querySelector("#topicImageInput"),
+  topicImagePickerButton: document.querySelector("#topicImagePickerButton"),
+  topicImagePreview: document.querySelector("#topicImagePreview"),
+  topicImageDialog: document.querySelector("#topicImageDialog"),
+  topicImageCloseButton: document.querySelector("#topicImageCloseButton"),
   topicImageChoices: document.querySelector("#topicImageChoices"),
   topicDescriptionInput: document.querySelector("#topicDescriptionInput"),
   unpublishTopicButton: document.querySelector("#unpublishTopicButton"),
@@ -450,6 +454,11 @@ function bindEvents() {
   elements.deleteTopicButton.addEventListener("click", () => elements.deleteTopicDialog.showModal());
   elements.deleteTopicNoButton.addEventListener("click", () => elements.deleteTopicDialog.close());
   elements.deleteTopicYesButton.addEventListener("click", deleteEditingTopic);
+  elements.topicImagePickerButton.addEventListener("click", () => {
+    renderTopicImageChoices();
+    elements.topicImageDialog.showModal();
+  });
+  elements.topicImageCloseButton.addEventListener("click", () => elements.topicImageDialog.close());
   elements.cancelEditButton.addEventListener("click", () => (state.editingTopicId ? openCreateView() : route("home")));
   elements.musicSearchForm.addEventListener("submit", searchMusicForTopic);
   elements.musicSearchInput.addEventListener("input", renderMusicSuggestions);
@@ -671,6 +680,7 @@ function renderDraftTracks() {
 function renderTopicImageChoices() {
   const groups = getTopicImageOptionGroups();
   const selected = elements.topicImageInput.value || (state.draftTracks[0]?.artworkUrl100 ? largerArtwork(state.draftTracks[0].artworkUrl100) : defaultTopicImage);
+  elements.topicImagePreview.src = selected;
   elements.topicImageChoices.innerHTML = groups
     .map((group) => `
       <div class="topic-image-group">
@@ -708,6 +718,7 @@ function getTopicImageOptionGroups() {
 function setTopicImage(value) {
   elements.topicImageInput.value = value;
   renderTopicImageChoices();
+  elements.topicImageDialog.close();
 }
 
 function selectedTrackItem(track) {

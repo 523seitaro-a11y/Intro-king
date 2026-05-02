@@ -133,7 +133,10 @@
                 <div>
                   <label for="topicImageInput">お題画像</label>
                   <input id="topicImageInput" type="hidden" />
-                  <div id="topicImageChoices" class="topic-image-choices"></div>
+                  <button id="topicImagePickerButton" class="topic-image-picker-button" type="button">
+                    <img id="topicImagePreview" src="assets/default-topic.png" alt="" />
+                    <span>画像を選択</span>
+                  </button>
                 </div>
               </div>
 
@@ -352,6 +355,16 @@
           <button id="deleteTopicYesButton" class="primary-button danger" type="button">はい</button>
         </div>
       </form>
+    </dialog>
+
+    <dialog id="topicImageDialog" class="topic-image-dialog">
+      <div class="topic-image-dialog-inner">
+        <div class="section-heading">
+          <h2>お題画像を選択</h2>
+          <button id="topicImageCloseButton" class="ghost-button" type="button">閉じる</button>
+        </div>
+        <div id="topicImageChoices" class="topic-image-choices"></div>
+      </div>
     </dialog>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
