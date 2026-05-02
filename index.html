@@ -112,16 +112,17 @@
 
       <section id="createView" class="view">
         <div class="create-shell">
-          <div class="section-heading genre-page-heading">
-            <div>
-              <p class="eyebrow">Create topic</p>
-              <h2 id="createTitle">お題作成</h2>
+          <div class="create-topbar">
+            <button id="cancelEditButton" class="ghost-button" type="button">戻る</button>
+            <h2 id="createTitle">お題作成</h2>
+            <div class="create-top-actions">
+              <button id="unpublishTopicButton" class="ghost-button danger hidden" type="button">公開停止</button>
+              <button class="primary-button" type="submit" form="topicForm">保存</button>
             </div>
-            <p>音楽を検索して曲を追加</p>
           </div>
 
-          <form id="topicForm" class="creator-panel topic-detail-panel">
-            <div class="topic-detail-grid">
+          <div class="create-workspace">
+            <form id="topicForm" class="creator-panel topic-detail-panel create-sidebar">
               <div class="topic-basic-fields">
                 <div>
                   <label for="topicNameInput">お題名</label>
@@ -135,37 +136,31 @@
               </div>
 
               <div>
-              <label for="topicDescriptionInput">説明</label>
-              <textarea id="topicDescriptionInput" maxlength="1000" rows="5" placeholder="例: 2019年以降のアニメ主題歌"></textarea>
+                <label for="topicDescriptionInput">説明</label>
+                <textarea id="topicDescriptionInput" maxlength="1000" rows="5" placeholder="例: 2019年以降のアニメ主題歌"></textarea>
               </div>
-            </div>
+            </form>
 
-            <div class="dialog-actions">
-              <button id="unpublishTopicButton" class="ghost-button danger hidden" type="button">公開停止</button>
-              <button id="cancelEditButton" class="ghost-button hidden" type="button">編集をやめる</button>
-              <button class="primary-button" type="submit">保存</button>
-            </div>
-          </form>
-
-          <div class="create-layout">
-            <div class="creator-panel current-tracks-panel">
-              <div class="section-heading">
-                <h2>現在入っている曲</h2>
-                <p id="selectedTrackCount">0曲</p>
+            <div class="create-main">
+              <div class="creator-panel current-tracks-panel">
+                <div class="section-heading">
+                  <h2>現在入っている曲</h2>
+                  <p id="selectedTrackCount">0曲</p>
+                </div>
+                <ol id="selectedTrackList" class="track-list"></ol>
               </div>
-              <ol id="selectedTrackList" class="track-list"></ol>
-            </div>
 
-            <div class="creator-panel music-search-panel">
-              <div class="section-heading">
-                <h2>曲を検索・追加</h2>
-                <p>Apple/iTunes試聴音源</p>
+              <div class="creator-panel music-search-panel">
+                <div class="section-heading">
+                  <h2>曲を検索・追加</h2>
+                  <p>Apple/iTunes試聴音源</p>
+                </div>
+                <form id="musicSearchForm" class="search-row">
+                  <input id="musicSearchInput" type="search" placeholder="曲・アーティストを検索" />
+                  <button type="submit">検索</button>
+                </form>
+                <div id="musicSearchResults" class="music-results"></div>
               </div>
-              <form id="musicSearchForm" class="search-row">
-                <input id="musicSearchInput" type="search" placeholder="曲・アーティストを検索" />
-                <button type="submit">検索</button>
-              </form>
-              <div id="musicSearchResults" class="music-results"></div>
             </div>
           </div>
         </div>

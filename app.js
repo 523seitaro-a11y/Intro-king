@@ -406,7 +406,7 @@ function bindEvents() {
 
   elements.topicForm.addEventListener("submit", saveTopicFromForm);
   elements.unpublishTopicButton.addEventListener("click", unpublishEditingTopic);
-  elements.cancelEditButton.addEventListener("click", () => openCreateView());
+  elements.cancelEditButton.addEventListener("click", () => (state.editingTopicId ? openCreateView() : route("home")));
   elements.musicSearchForm.addEventListener("submit", searchMusicForTopic);
   elements.musicSearchInput.addEventListener("input", renderMusicSuggestions);
 
@@ -505,7 +505,7 @@ function openCreateView(topicId = "") {
   elements.musicSearchInput.value = "";
   elements.musicSearchResults.innerHTML = "";
   elements.unpublishTopicButton.classList.toggle("hidden", !topic?.published);
-  elements.cancelEditButton.classList.toggle("hidden", !topic);
+  elements.cancelEditButton.textContent = topic ? "編集をやめる" : "ホームへ";
   renderDraftTracks();
   renderMusicSuggestions();
   route("create");

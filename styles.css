@@ -765,13 +765,48 @@ textarea {
 }
 
 .create-shell {
-  max-width: 1100px;
-  margin: 0 auto;
+  max-width: none;
+  margin: -34px calc(clamp(18px, 4vw, 64px) * -1) -64px;
 }
 
-.create-layout {
+.create-topbar {
+  position: sticky;
+  top: 66px;
+  z-index: 8;
   display: grid;
-  grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.1fr);
+  grid-template-columns: 140px minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  min-height: 62px;
+  border-bottom: 1px solid var(--line);
+  padding: 10px clamp(18px, 4vw, 64px);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+}
+
+.create-topbar h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.create-top-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.create-workspace {
+  display: grid;
+  grid-template-columns: 244px minmax(0, 1fr);
+  gap: 22px;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 22px clamp(18px, 4vw, 64px) 64px;
+}
+
+.create-main {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.9fr) minmax(360px, 1.1fr);
   gap: 18px;
 }
 
@@ -791,6 +826,14 @@ textarea {
   gap: 14px;
 }
 
+.create-sidebar {
+  position: sticky;
+  top: 146px;
+  align-self: start;
+  max-height: calc(100vh - 168px);
+  overflow-y: auto;
+}
+
 .creator-panel {
   display: grid;
   gap: 12px;
@@ -802,16 +845,16 @@ textarea {
 
 .music-search-panel {
   position: sticky;
-  top: 86px;
-  max-height: calc(100vh - 104px);
+  top: 146px;
+  max-height: calc(100vh - 168px);
   overflow-y: auto;
   align-self: start;
 }
 
 .current-tracks-panel {
   position: sticky;
-  top: 86px;
-  max-height: calc(100vh - 104px);
+  top: 146px;
+  max-height: calc(100vh - 168px);
   overflow-y: auto;
   align-self: start;
 }
@@ -1430,9 +1473,24 @@ textarea {
 
   .settings-sidebar,
   .music-search-panel,
-  .current-tracks-panel {
+  .current-tracks-panel,
+  .create-sidebar {
     position: static;
     max-height: none;
+  }
+
+  .create-shell {
+    margin: -34px -18px -64px;
+  }
+
+  .create-topbar,
+  .create-workspace,
+  .create-main {
+    grid-template-columns: 1fr;
+  }
+
+  .create-top-actions {
+    justify-content: stretch;
   }
 
   .topic-grid,
@@ -1462,7 +1520,7 @@ textarea {
   .genre-grid,
   .choice-grid,
   .mode-grid,
-  .create-layout,
+  .create-main,
   .music-row,
   .game-status,
   .track-card,
