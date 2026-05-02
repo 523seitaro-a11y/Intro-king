@@ -331,12 +331,13 @@
             </div>
             <form id="profileForm" class="profile-form settings-profile-form">
               <div class="profile-preview">
-                <span id="settingsAvatar" class="user-avatar">?</span>
-                <small>プロフィール画像</small>
+                <label class="profile-image-picker" for="profileImageInput" aria-label="プロフィール画像を変更">
+                  <span id="settingsAvatar" class="user-avatar">?</span>
+                </label>
+                <small>アイコンをクリックして変更</small>
               </div>
               <div class="settings-fields">
-                <label for="profileImageInput">画像</label>
-                <input id="profileImageInput" type="file" accept="image/*" />
+                <input id="profileImageInput" class="visually-hidden" type="file" accept="image/*" />
                 <label for="profileIconInput">アイコン</label>
                 <input id="profileIconInput" maxlength="2" placeholder="例: 王" />
                 <label for="profileNameInput">ユーザー名</label>

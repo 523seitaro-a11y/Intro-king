@@ -654,10 +654,14 @@ textarea {
   color: var(--muted);
   font-size: 16px;
   font-weight: 800;
+  transition:
+    color 0.16s ease,
+    filter 0.16s ease;
 }
 
 .like-button:hover {
   color: #d93656;
+  filter: brightness(0.78);
 }
 
 .like-button.liked {
@@ -1209,6 +1213,30 @@ textarea {
   width: 86px;
   height: 86px;
   font-size: 26px;
+}
+
+.profile-image-picker {
+  display: block;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-image-picker .user-avatar {
+  transition: filter 0.16s ease;
+}
+
+.profile-image-picker:hover .user-avatar {
+  filter: brightness(0.78);
+}
+
+.visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .settings-fields {
