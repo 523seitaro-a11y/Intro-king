@@ -290,11 +290,12 @@ body.create-mode .topbar {
   font-weight: 700;
 }
 
-.feed-grid {
+.topic-grid.feed-grid {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 4px;
+  gap: 2px;
+  grid-template-columns: none;
   max-height: 232px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -303,7 +304,7 @@ body.create-mode .topbar {
   scrollbar-width: none;
 }
 
-.feed-grid .topic-card {
+.topic-grid.feed-grid .topic-card {
   grid-template-rows: 128px 40px 22px 26px;
   flex: 0 0 128px;
   width: 128px;
@@ -311,19 +312,19 @@ body.create-mode .topbar {
   overflow: visible;
 }
 
-.feed-grid .topic-image-button {
+.topic-grid.feed-grid .topic-image-button {
   width: 128px;
   height: 128px;
 }
 
-.feed-grid .topic-meta {
+.topic-grid.feed-grid .topic-meta {
   align-self: end;
   margin-top: 0;
   min-height: 22px;
   overflow: visible;
 }
 
-.feed-grid::-webkit-scrollbar {
+.topic-grid.feed-grid::-webkit-scrollbar {
   display: none;
 }
 
@@ -1738,7 +1739,7 @@ textarea {
   padding-top: 8px;
 }
 
-.feed-grid .topic-meta {
+.topic-grid.feed-grid .topic-meta {
   border-top: 0;
   padding-top: 0;
 }
