@@ -261,13 +261,13 @@ body.create-mode .topbar {
 
 .home-feed {
   display: grid;
-  gap: 44px;
+  gap: 64px;
   width: 100%;
 }
 
 .feed-section {
   display: grid;
-  gap: 16px;
+  gap: 24px;
 }
 
 .feed-heading {
@@ -293,8 +293,10 @@ body.create-mode .topbar {
 .feed-grid {
   display: flex;
   align-items: flex-start;
-  gap: 24px;
+  gap: 14px;
+  max-height: 232px;
   overflow-x: auto;
+  overflow-y: hidden;
   padding-bottom: 8px;
   scroll-padding-inline: 2px;
   scrollbar-width: none;
