@@ -614,7 +614,7 @@ async function searchMusicForTopic(event) {
   elements.musicSearchResults.innerHTML = `<div class="empty-state">検索中...</div>`;
   try {
     const tracks = await searchTracks(query);
-    renderMusicResultList(tracks.slice(0, 12));
+    renderMusicResultList(tracks);
   } catch (error) {
     console.error(error);
     elements.musicSearchResults.innerHTML = `<div class="empty-state">曲の検索に失敗しました</div>`;
@@ -638,7 +638,7 @@ async function renderMusicSuggestions() {
 function renderMusicResultList(tracks = state.musicSearchSource) {
   state.musicSearchSource = tracks;
   const selectedIds = new Set(state.draftTracks.map((track) => track.trackId));
-  state.musicSearchCache = tracks.filter((track) => !selectedIds.has(track.trackId)).slice(0, 12);
+  state.musicSearchCache = tracks.filter((track) => !selectedIds.has(track.trackId));
   elements.musicSearchResults.innerHTML = state.musicSearchCache.length
     ? state.musicSearchCache.map(musicResultItem).join("")
     : `<div class="empty-state">追加できる曲がありません</div>`;

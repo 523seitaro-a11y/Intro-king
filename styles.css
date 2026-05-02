@@ -1139,23 +1139,23 @@ textarea {
 .music-search-panel {
   position: sticky;
   top: 18px;
+  grid-template-rows: auto auto minmax(0, 1fr);
   max-height: calc(100vh - 36px);
-  overflow-y: auto;
+  overflow: hidden;
   align-self: start;
 }
 
 .current-tracks-panel {
   position: sticky;
   top: 18px;
+  grid-template-rows: auto minmax(0, 1fr);
   max-height: calc(100vh - 36px);
-  overflow-y: auto;
+  overflow: hidden;
   align-self: start;
 }
 
 .current-tracks-panel .section-heading,
 .music-search-panel .section-heading {
-  position: sticky;
-  top: 0;
   z-index: 4;
   margin: -18px -18px 12px;
   padding: 18px 18px 12px;
@@ -1163,12 +1163,17 @@ textarea {
 }
 
 .music-search-panel .search-row {
-  position: sticky;
-  top: 60px;
   z-index: 3;
   margin: 0 -18px 12px;
   padding: 0 18px 12px;
   background: var(--panel);
+}
+
+.current-tracks-panel .track-list,
+.music-search-panel .music-results {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .settings-shell {
