@@ -252,6 +252,7 @@ const elements = {
   genreTopicsTitle: document.querySelector("#genreTopicsTitle"),
   genreTopicsList: document.querySelector("#genreTopicsList"),
   modeBackButton: document.querySelector("#modeBackButton"),
+  modeTopicImage: document.querySelector("#modeTopicImage"),
   modeTopicTitle: document.querySelector("#modeTopicTitle"),
   modeTopicDescription: document.querySelector("#modeTopicDescription"),
   modeCreatorMeta: document.querySelector("#modeCreatorMeta"),
@@ -1098,6 +1099,7 @@ function openModeSelect(topicId) {
 
 function renderModeSelect() {
   if (!state.selectedTopic) return;
+  elements.modeTopicImage.innerHTML = topicImageHtml(state.selectedTopic);
   elements.modeTopicTitle.textContent = state.selectedTopic.name;
   elements.modeTopicDescription.textContent = `${state.selectedTopic.tracks.length}曲 / ${state.selectedTopic.genre || "未分類"}`;
   elements.modeCreatorMeta.innerHTML = creatorButton(state.selectedTopic, true);
