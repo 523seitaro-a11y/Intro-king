@@ -139,9 +139,12 @@ a {
 
 .icon-button img,
 .user-avatar img {
+  display: block;
   width: 100%;
   height: 100%;
+  border-radius: inherit;
   object-fit: cover;
+  object-position: center;
 }
 
 main {
@@ -389,7 +392,7 @@ textarea {
 
 .section-heading h2 {
   margin: 0;
-  font-size: 26px;
+  font-size: 22px;
 }
 
 .heading-link {
@@ -648,6 +651,7 @@ textarea {
   width: 38px;
   height: 38px;
   place-items: center;
+  overflow: hidden;
   border-radius: 50%;
   background: var(--brand-mint);
   color: #ffffff;
@@ -713,6 +717,10 @@ textarea {
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--panel);
+}
+
+.sidebar-action {
+  width: 100%;
 }
 
 .profile-form label {
@@ -798,6 +806,63 @@ textarea {
   max-height: calc(100vh - 104px);
   overflow-y: auto;
   align-self: start;
+}
+
+.current-tracks-panel {
+  position: sticky;
+  top: 86px;
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+  align-self: start;
+}
+
+.settings-shell {
+  display: grid;
+  grid-template-columns: 176px minmax(0, 760px);
+  gap: 42px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.settings-sidebar {
+  position: sticky;
+  top: 86px;
+  align-self: start;
+}
+
+.settings-main {
+  display: grid;
+  gap: 18px;
+}
+
+.settings-heading {
+  align-items: flex-start;
+}
+
+.settings-profile-form {
+  grid-template-columns: 130px minmax(0, 1fr);
+  align-items: start;
+  padding: 22px;
+}
+
+.profile-preview {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-preview .user-avatar {
+  width: 86px;
+  height: 86px;
+  font-size: 26px;
+}
+
+.settings-fields {
+  display: grid;
+  gap: 10px;
 }
 
 .creator-panel label {
@@ -1226,7 +1291,7 @@ textarea {
 }
 
 .section-heading h2 {
-  font-size: clamp(28px, 3vw, 38px);
+  font-size: clamp(20px, 2vw, 26px);
 }
 
 .mypage-section .section-heading {
@@ -1359,6 +1424,17 @@ textarea {
     padding-left: 0;
   }
 
+  .settings-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-sidebar,
+  .music-search-panel,
+  .current-tracks-panel {
+    position: static;
+    max-height: none;
+  }
+
   .topic-grid,
   .genre-grid,
   .choice-grid,
@@ -1395,6 +1471,10 @@ textarea {
   }
 
   .profile-form {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-profile-form {
     grid-template-columns: 1fr;
   }
 

@@ -107,6 +107,7 @@ const views = {
   result: document.querySelector("#resultView"),
   ranking: document.querySelector("#rankingView"),
   myData: document.querySelector("#myDataView"),
+  profileSettings: document.querySelector("#profileSettingsView"),
 };
 
 const elements = {
@@ -187,6 +188,9 @@ const elements = {
   mypageSideBest: document.querySelector("#mypageSideBest"),
   mypageSideTop: document.querySelector("#mypageSideTop"),
   mypageSideTopics: document.querySelector("#mypageSideTopics"),
+  profileSettingsButton: document.querySelector("#profileSettingsButton"),
+  profileSettingsBackButton: document.querySelector("#profileSettingsBackButton"),
+  settingsAvatar: document.querySelector("#settingsAvatar"),
   myTotalPlays: document.querySelector("#myTotalPlays"),
   myBestTime: document.querySelector("#myBestTime"),
   myTopCount: document.querySelector("#myTopCount"),
@@ -388,6 +392,8 @@ function bindEvents() {
   elements.modeDetailButton.addEventListener("click", () => openTopicDetail(state.selectedTopic?.id, "mode", false));
   elements.modeHomeButton.addEventListener("click", () => route("home"));
   elements.modeLikeButton.addEventListener("click", () => likeTopic(state.selectedTopic?.id));
+  elements.profileSettingsButton.addEventListener("click", () => route("profileSettings"));
+  elements.profileSettingsBackButton.addEventListener("click", () => route("myData"));
   elements.detailBackButton.addEventListener("click", () => route(state.detailReturnRoute || "mode"));
   elements.publishTopicButton.addEventListener("click", publishCurrentTopic);
   elements.detailEditButton.addEventListener("click", () => openCreateView(state.detailTopicId));
@@ -403,8 +409,6 @@ function bindEvents() {
   elements.cancelEditButton.addEventListener("click", () => openCreateView());
   elements.musicSearchForm.addEventListener("submit", searchMusicForTopic);
   elements.musicSearchInput.addEventListener("input", renderMusicSuggestions);
-  elements.topicNameInput.addEventListener("input", renderMusicSuggestions);
-  elements.topicGenreInput.addEventListener("change", renderMusicSuggestions);
 
   elements.profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -1095,7 +1099,7 @@ function renderMyData() {
   const myTopics = targetUser ? state.topics.filter((topic) => topic.creator === targetUser) : [];
   elements.profileIconInput.value = state.profileIcon;
   elements.profileNameInput.value = state.player;
-  elements.profileForm.classList.toggle("hidden", !isOwnPage);
+  elements.profileSettingsButton.classList.toggle("hidden", !isOwnPage);
   elements.myPageTitle.textContent = targetUser || "ゲスト";
   elements.mypageName.textContent = targetUser || "ゲスト";
   renderUserAvatar(elements.mypageAvatar, "user-avatar", targetUser);
@@ -1143,6 +1147,12 @@ function renderMyData() {
     : `<li class="empty-state">作成したお題はまだありません</li>`;
 }
 
+function renderProfileSettings() {
+  elements.profileIconInput.value = state.profileIcon;
+  elements.profileNameInput.value = state.player;
+  renderAvatar(elements.settingsAvatar, "user-avatar");
+}
+
 function saveProfile() {
   const selectedImage = elements.profileImageInput.files?.[0];
   const previousPlayer = state.player;
@@ -1155,6 +1165,7 @@ function saveProfile() {
     updateMyTopicProfile(previousPlayer);
     renderPlayer();
     renderMyData();
+    renderProfileSettings();
     showToast("プロフィールを保存しました。");
     return;
   }
@@ -1167,6 +1178,7 @@ function saveProfile() {
     updateMyTopicProfile(previousPlayer);
     renderPlayer();
     renderMyData();
+    renderProfileSettings();
     showToast("プロフィール画像を保存しました。");
   });
   reader.readAsDataURL(selectedImage);
@@ -1250,6 +1262,7 @@ function syncRoute() {
   if (name === "result") renderResult();
   if (name === "ranking") renderRanking();
   if (name === "myData") renderMyData();
+  if (name === "profileSettings") renderProfileSettings();
   if (name !== "game") stopAudio();
 }
 

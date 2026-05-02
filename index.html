@@ -148,7 +148,7 @@
           </form>
 
           <div class="create-layout">
-            <div class="creator-panel">
+            <div class="creator-panel current-tracks-panel">
               <div class="section-heading">
                 <h2>現在入っている曲</h2>
                 <p id="selectedTrackCount">0曲</p>
@@ -247,6 +247,7 @@
               <div><span id="mypageSideTop">0</span><small>1位記録</small></div>
               <div><span id="mypageSideTopics">0</span><small>作成お題</small></div>
             </div>
+            <button id="profileSettingsButton" class="ghost-button sidebar-action" type="button">プロフィール設定</button>
           </aside>
 
           <div class="my-data-shell">
@@ -257,15 +258,6 @@
                 </div>
                 <p id="myDataPlayer" class="hidden"></p>
               </div>
-              <form id="profileForm" class="profile-form">
-                <label for="profileImageInput">画像</label>
-                <input id="profileImageInput" type="file" accept="image/*" />
-                <label for="profileIconInput">アイコン</label>
-                <input id="profileIconInput" maxlength="2" placeholder="例: 王" />
-                <label for="profileNameInput">ユーザー名</label>
-                <input id="profileNameInput" maxlength="24" placeholder="例: intro_master" />
-                <button class="primary-button" type="submit">保存</button>
-              </form>
               <div class="data-summary">
                 <div>
                   <span id="myTotalPlays">0</span>
@@ -294,6 +286,38 @@
               </div>
               <ol id="myTopicList" class="topic-list"></ol>
             </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="profileSettingsView" class="view">
+        <div class="settings-shell">
+          <aside class="settings-sidebar">
+            <button id="profileSettingsBackButton" class="ghost-button" type="button">マイページへ戻る</button>
+          </aside>
+
+          <div class="settings-main">
+            <div class="section-heading settings-heading">
+              <div>
+                <p class="eyebrow">Settings</p>
+                <h2>プロフィール設定</h2>
+              </div>
+            </div>
+            <form id="profileForm" class="profile-form settings-profile-form">
+              <div class="profile-preview">
+                <span id="settingsAvatar" class="user-avatar">?</span>
+                <small>プロフィール画像</small>
+              </div>
+              <div class="settings-fields">
+                <label for="profileImageInput">画像</label>
+                <input id="profileImageInput" type="file" accept="image/*" />
+                <label for="profileIconInput">アイコン</label>
+                <input id="profileIconInput" maxlength="2" placeholder="例: 王" />
+                <label for="profileNameInput">ユーザー名</label>
+                <input id="profileNameInput" maxlength="24" placeholder="例: intro_master" />
+                <button class="primary-button" type="submit">保存</button>
+              </div>
+            </form>
           </div>
         </div>
       </section>
