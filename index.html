@@ -9,7 +9,7 @@
   <body>
     <header class="topbar">
       <a class="brand" href="#home" aria-label="イントロキング ホーム">
-        <span class="brand-mark">王</span>
+        <span class="brand-mark"><img src="assets/site-icon.png" alt="" /></span>
         <span>イントロキング</span>
       </a>
       <form id="topSearchForm" class="top-search" role="search">
@@ -28,11 +28,11 @@
         <div class="home-layout">
           <aside class="home-sidebar">
             <div class="sidebar-block">
-              <button id="popularListButton" class="sidebar-title" type="button">人気のお題</button>
+              <button id="popularListButton" class="sidebar-title" data-topic-list="popular" type="button">人気のお題</button>
               <div id="sidebarPopularList" class="sidebar-list"></div>
             </div>
             <div class="sidebar-block">
-              <button id="genreListButton" class="sidebar-title" type="button">ジャンル</button>
+              <button id="genreListButton" class="sidebar-title" data-topic-list="genres" type="button">ジャンル</button>
               <div id="genreGrid" class="sidebar-list"></div>
             </div>
           </aside>
@@ -40,32 +40,50 @@
           <div class="home-feed">
             <section class="feed-section">
               <div class="feed-heading">
-                <button id="newListButton" class="heading-link" type="button">新着</button>
+                <span>定番</span>
               </div>
-              <div id="newGrid" class="topic-grid feed-grid"></div>
+              <div id="standardGrid" class="topic-grid feed-grid"></div>
             </section>
 
             <section class="feed-section">
               <div class="feed-heading">
-                <span>人気</span>
+                <span>急上昇</span>
               </div>
               <div id="popularGrid" class="topic-grid feed-grid"></div>
+            </section>
+
+            <section class="feed-section">
+              <div class="feed-heading">
+                <button id="newListButton" class="heading-link" type="button">新着</button>
+              </div>
+              <div id="newGrid" class="topic-grid feed-grid"></div>
             </section>
           </div>
         </div>
       </section>
 
       <section id="genreView" class="view">
-        <div class="genre-page-shell">
-          <button id="genreBackButton" class="ghost-button" type="button">ホームへ</button>
-          <div class="section-heading genre-page-heading">
-            <div>
-              <p id="topicListEyebrow" class="eyebrow">Genre ranking</p>
-              <h2 id="genreTopicsTitle">お題一覧</h2>
+        <div class="topic-list-layout">
+          <aside class="home-sidebar">
+            <div class="sidebar-block">
+              <button class="sidebar-title" data-topic-list="popular" type="button">人気のお題</button>
+              <div id="topicListSidebarPopularList" class="sidebar-list"></div>
             </div>
-            <p id="topicListDescription">人気順</p>
+            <div class="sidebar-block">
+              <button class="sidebar-title" data-topic-list="genres" type="button">ジャンル</button>
+              <div id="topicListGenreGrid" class="sidebar-list"></div>
+            </div>
+          </aside>
+          <div class="genre-page-shell">
+            <div class="section-heading genre-page-heading hidden">
+              <div>
+                <p id="topicListEyebrow" class="eyebrow">Genre ranking</p>
+                <h2 id="genreTopicsTitle">お題一覧</h2>
+              </div>
+              <p id="topicListDescription">人気順</p>
+            </div>
+            <ol id="genreTopicsList" class="topic-list"></ol>
           </div>
-          <ol id="genreTopicsList" class="topic-list"></ol>
         </div>
       </section>
 
@@ -113,6 +131,7 @@
 
       <section id="createView" class="view">
         <div class="create-shell">
+          <button id="cancelEditButton" class="ghost-button create-home-button" type="button">ホームへ戻る</button>
           <div class="create-workspace">
             <form id="topicForm" class="creator-panel topic-detail-panel create-sidebar">
               <div class="create-sidebar-heading">
@@ -148,7 +167,6 @@
                 <button class="primary-button" type="submit">保存</button>
                 <button id="unpublishTopicButton" class="ghost-button danger hidden" type="button">公開停止</button>
                 <button id="deleteTopicButton" class="ghost-button danger hidden" type="button">お題を削除</button>
-                <button id="cancelEditButton" class="ghost-button" type="button">戻る</button>
               </div>
             </form>
 

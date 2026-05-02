@@ -78,10 +78,17 @@ a {
   width: 34px;
   height: 34px;
   place-items: center;
-  border-radius: 14px;
-  background: #ffffff;
+  overflow: hidden;
+  border-radius: 8px;
+  background: transparent;
   color: var(--brand-blue);
   font-size: 13px;
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .top-actions {
@@ -168,7 +175,17 @@ body.create-mode .topbar {
   grid-template-columns: minmax(0, 1fr);
   gap: 28px;
   align-items: start;
-  max-width: 1180px;
+  max-width: none;
+  margin: 0 auto;
+  padding-left: 198px;
+}
+
+.topic-list-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  max-width: none;
   margin: 0 auto;
   padding-left: 198px;
 }
@@ -238,6 +255,7 @@ body.create-mode .topbar {
 .home-feed {
   display: grid;
   gap: 26px;
+  width: 100%;
 }
 
 .feed-section {
@@ -248,7 +266,7 @@ body.create-mode .topbar {
 .feed-heading {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
 }
 
@@ -266,7 +284,7 @@ body.create-mode .topbar {
 }
 
 .feed-grid {
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 }
 
 .hero {
@@ -506,6 +524,10 @@ textarea {
   cursor: pointer;
 }
 
+.topic-row.no-rank {
+  grid-template-columns: 52px minmax(0, 1fr) auto auto auto auto;
+}
+
 .topic-card-action {
   cursor: default;
 }
@@ -660,11 +682,16 @@ textarea {
 .game-shell,
 .ranking-shell,
 .result-shell,
-.genre-page-shell,
 .mode-shell,
 .detail-shell {
   max-width: 980px;
   margin: 0 auto;
+}
+
+.genre-page-shell {
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 
 .my-data-shell {
@@ -831,6 +858,16 @@ textarea {
   margin: 0 auto;
 }
 
+.create-home-button {
+  position: fixed;
+  top: 14px;
+  left: 12px;
+  z-index: 30;
+  min-height: 34px;
+  padding-inline: 12px;
+  background: #ffffff;
+}
+
 .create-workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -864,7 +901,7 @@ textarea {
 
 .create-sidebar {
   position: fixed;
-  top: 78px;
+  top: 62px;
   bottom: 0;
   left: 12px;
   width: 238px;
@@ -1009,18 +1046,37 @@ textarea {
 
 .music-search-panel {
   position: sticky;
-  top: 146px;
-  max-height: calc(100vh - 168px);
+  top: 18px;
+  max-height: calc(100vh - 36px);
   overflow-y: auto;
   align-self: start;
 }
 
 .current-tracks-panel {
   position: sticky;
-  top: 146px;
-  max-height: calc(100vh - 168px);
+  top: 18px;
+  max-height: calc(100vh - 36px);
   overflow-y: auto;
   align-self: start;
+}
+
+.current-tracks-panel .section-heading,
+.music-search-panel .section-heading {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  margin: -18px -18px 12px;
+  padding: 18px 18px 12px;
+  background: var(--panel);
+}
+
+.music-search-panel .search-row {
+  position: sticky;
+  top: 60px;
+  z-index: 3;
+  margin: 0 -18px 12px;
+  padding: 0 18px 12px;
+  background: var(--panel);
 }
 
 .settings-shell {
@@ -1616,7 +1672,8 @@ textarea {
     grid-template-columns: 1fr;
   }
 
-  .home-layout {
+  .home-layout,
+  .topic-list-layout {
     grid-template-columns: 1fr;
     padding-left: 0;
   }
@@ -1638,6 +1695,11 @@ textarea {
 
   .create-workspace {
     padding-left: 0;
+  }
+
+  .create-home-button {
+    position: static;
+    justify-self: start;
   }
 
   .settings-shell {

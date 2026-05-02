@@ -5,7 +5,7 @@ const gameModes = [
   { id: "all", label: "全問チャレンジ", questions: 999, description: "全曲" },
 ];
 
-const defaultTopics = [
+const baseDefaultTopics = [
   {
     id: "sample-anime",
     name: "アニソン定番",
@@ -50,6 +50,42 @@ const defaultTopics = [
   },
 ];
 
+function createDefaultTopics() {
+  const genreSeeds = [
+    ["アニソン", "anime song"],
+    ["J-POP", "j-pop hits"],
+    ["ボカロ", "vocaloid"],
+    ["K-POP", "k-pop hits"],
+    ["ロック", "japanese rock"],
+    ["アイドル", "japanese idol"],
+    ["ゲーム音楽", "game music"],
+    ["平成ヒット", "heisei hits"],
+    ["映画・ドラマ", "japanese drama theme"],
+    ["その他", "japanese pop"],
+  ];
+  const generated = Array.from({ length: 100 }, (_, index) => {
+    const [genre, seed] = genreSeeds[index % genreSeeds.length];
+    const number = index + 1;
+    return {
+      id: `sample-auto-${number}`,
+      name: `${genre}セレクション ${number}`,
+      genre,
+      description: "仮で用意した公開お題です。曲は初回プレイ時にApple/iTunesから取得されます。",
+      creator: "イントロキング",
+      createdAt: new Date(Date.UTC(2026, 4, 1, 1, index)).toISOString(),
+      baseLikes: 40 + ((100 - index) % 37),
+      likes: 40 + ((100 - index) % 37),
+      likedBy: [],
+      published: true,
+      seedQuery: `${seed} ${number}`,
+      tracks: [],
+    };
+  });
+  return [...baseDefaultTopics, ...generated];
+}
+
+const defaultTopics = createDefaultTopics();
+
 const topicGenreOptions = [
   "アニソン",
   "J-POP",
@@ -89,6 +125,7 @@ const state = {
   lastEntry: null,
   tracks: [],
   questionIndex: 0,
+  correctCount: 0,
   correctTrack: null,
   startedAt: 0,
   timerId: null,
@@ -114,15 +151,17 @@ const views = {
 
 const elements = {
   popularGrid: document.querySelector("#popularGrid"),
+  standardGrid: document.querySelector("#standardGrid"),
   popularListButton: document.querySelector("#popularListButton"),
   sidebarPopularList: document.querySelector("#sidebarPopularList"),
+  topicListSidebarPopularList: document.querySelector("#topicListSidebarPopularList"),
   genreListButton: document.querySelector("#genreListButton"),
   genreGrid: document.querySelector("#genreGrid"),
+  topicListGenreGrid: document.querySelector("#topicListGenreGrid"),
   topicListEyebrow: document.querySelector("#topicListEyebrow"),
   topicListDescription: document.querySelector("#topicListDescription"),
   genreTopicsTitle: document.querySelector("#genreTopicsTitle"),
   genreTopicsList: document.querySelector("#genreTopicsList"),
-  genreBackButton: document.querySelector("#genreBackButton"),
   modeBackButton: document.querySelector("#modeBackButton"),
   modeTopicTitle: document.querySelector("#modeTopicTitle"),
   modeTopicDescription: document.querySelector("#modeTopicDescription"),
@@ -222,7 +261,12 @@ const elements = {
 function loadTopics() {
   try {
     const saved = JSON.parse(localStorage.getItem("introKingTopics") || "[]");
-    state.topics = saved.length ? saved : defaultTopics;
+    if (saved.length) {
+      const savedIds = new Set(saved.map((topic) => topic.id));
+      state.topics = [...saved, ...defaultTopics.filter((topic) => !savedIds.has(topic.id))];
+    } else {
+      state.topics = defaultTopics;
+    }
   } catch {
     state.topics = defaultTopics;
   }
@@ -234,16 +278,29 @@ function saveTopics() {
 }
 
 function renderHome() {
+  const standard = getStandardTopics().slice(0, 20);
   const popular = getPopularTopics().slice(0, 16);
   const newest = getNewTopics().slice(0, 16);
+  elements.standardGrid.innerHTML = standard.length ? standard.map(topicCard).join("") : emptyCard("定番お題がありません");
   elements.popularGrid.innerHTML = popular.length ? popular.map(topicCard).join("") : emptyCard("お題を作成してください");
   elements.newGrid.innerHTML = newest.length ? newest.map(topicCard).join("") : emptyCard("まだ新着お題がありません");
-  elements.sidebarPopularList.innerHTML = popular.length
+  renderSharedSidebars();
+}
+
+function renderSharedSidebars() {
+  const popular = getPopularTopics();
+  const popularMarkup = popular.length
     ? popular.slice(0, 6).map((topic) => `<button data-topic-id="${escapeHtml(topic.id)}">${escapeHtml(topic.name)}</button>`).join("")
     : `<span>お題なし</span>`;
-  elements.genreGrid.innerHTML = getGenres()
+  const genreMarkup = getGenres()
     .map((genre) => `<button class="genre-button" data-genre="${escapeHtml(genre)}">${escapeHtml(genre)}</button>`)
     .join("");
+  [elements.sidebarPopularList, elements.topicListSidebarPopularList].filter(Boolean).forEach((target) => {
+    target.innerHTML = popularMarkup;
+  });
+  [elements.genreGrid, elements.topicListGenreGrid].filter(Boolean).forEach((target) => {
+    target.innerHTML = genreMarkup;
+  });
 }
 
 function topicCard(topic) {
@@ -267,8 +324,7 @@ function topicListItem(topic, index) {
   const liked = isTopicLiked(topic);
   return `
     <li>
-      <div class="topic-list-button topic-row" data-topic-id="${escapeHtml(topic.id)}">
-        <span class="topic-rank">${index + 1}</span>
+      <div class="topic-list-button topic-row no-rank" data-topic-id="${escapeHtml(topic.id)}">
         <img class="topic-thumb" src="${escapeHtml(getTopicImage(topic))}" alt="" />
         <strong>${escapeHtml(topic.name)}</strong>
         <small>${escapeHtml(topic.genre || "未分類")} / ${topic.tracks.length}曲 / ♥ ${topic.likes || 0}</small>
@@ -288,7 +344,7 @@ function isTopicLiked(topic) {
 }
 
 function getTopicImage(topic) {
-  return topic?.image || defaultTopicImage;
+  return topic?.image || (topic?.tracks?.[0]?.artworkUrl100 ? largerArtwork(topic.tracks[0].artworkUrl100) : defaultTopicImage);
 }
 
 function creatorButton(topic, withName = false) {
@@ -334,6 +390,17 @@ function bindEvents() {
     if (userButton) {
       event.stopPropagation();
       openUserPage(userButton.dataset.userName);
+      return;
+    }
+
+    const listButton = event.target.closest("[data-topic-list]");
+    if (listButton) {
+      renderTopicListPage({
+        title: listButton.dataset.topicList === "genres" ? "ジャンル" : "人気のお題",
+        eyebrow: listButton.dataset.topicList === "genres" ? "Genres" : "Popular topics",
+        description: listButton.dataset.topicList === "genres" ? "ジャンルごとの人気お題" : "いいねが多い投稿お題",
+        topics: getPopularTopics(),
+      });
       return;
     }
 
@@ -431,7 +498,6 @@ function bindEvents() {
     state.profilePageUser = "";
     route("myData");
   });
-  elements.genreBackButton.addEventListener("click", () => route("home"));
   elements.modeBackButton.addEventListener("click", () => route("genre"));
   elements.modeRankingButton.addEventListener("click", () => route("ranking"));
   elements.modeDetailButton.addEventListener("click", () => openTopicDetail(state.selectedTopic?.id, "mode", false));
@@ -459,7 +525,7 @@ function bindEvents() {
     elements.topicImageDialog.showModal();
   });
   elements.topicImageCloseButton.addEventListener("click", () => elements.topicImageDialog.close());
-  elements.cancelEditButton.addEventListener("click", () => (state.editingTopicId ? openCreateView() : route("home")));
+  elements.cancelEditButton.addEventListener("click", () => route("home"));
   elements.musicSearchForm.addEventListener("submit", searchMusicForTopic);
   elements.musicSearchInput.addEventListener("input", renderMusicSuggestions);
 
@@ -475,6 +541,10 @@ function bindEvents() {
 
 function getPopularTopics() {
   return sortTopics(getPublishedTopics(), "popular");
+}
+
+function getStandardTopics() {
+  return sortTopics(getPublishedTopics().filter((topic) => topic.creator === "イントロキング"), "popular");
 }
 
 function getNewTopics() {
@@ -515,6 +585,7 @@ function renderSearchResults(text) {
 }
 
 function renderGenrePage() {
+  renderSharedSidebars();
   const list = state.currentTopicList;
   elements.topicListEyebrow.textContent = list.eyebrow;
   elements.genreTopicsTitle.textContent = list.title;
@@ -578,7 +649,7 @@ function openCreateView(topicId = "") {
   elements.musicSearchResults.innerHTML = "";
   elements.unpublishTopicButton.classList.toggle("hidden", !topic?.published);
   elements.deleteTopicButton.classList.toggle("hidden", !topic);
-  elements.cancelEditButton.textContent = topic ? "編集をやめる" : "ホームへ";
+  elements.cancelEditButton.textContent = "ホームへ戻る";
   renderDraftTracks();
   renderTopicImageChoices();
   renderMusicSuggestions();
@@ -955,6 +1026,7 @@ async function startGame(topicId, mode = state.currentMode) {
     showToast("サンプルお題の曲を準備中です...");
     const tracks = await searchTracks(topic.seedQuery);
     topic.tracks = tracks.slice(0, 30).map(normalizeTrack);
+    if (!topic.image && topic.tracks[0]?.artworkUrl100) topic.image = largerArtwork(topic.tracks[0].artworkUrl100);
     saveTopics();
   }
 
@@ -969,6 +1041,7 @@ async function startGame(topicId, mode = state.currentMode) {
   state.rankingModeId = mode.id;
   state.tracks = shuffle(topic.tracks).slice(0, questionCount);
   state.questionIndex = 0;
+  state.correctCount = 0;
   state.totalTime = 0;
   route("game");
   loadQuestion();
@@ -1108,10 +1181,11 @@ function answer(trackId, button) {
     choice.disabled = true;
     if (isAnswer) choice.classList.add("correct");
   });
-  if (trackId !== state.correctTrack.trackId) button.classList.add("wrong");
-
   if (trackId === state.correctTrack.trackId) {
+    state.correctCount += 1;
     elements.artwork.classList.remove("hidden");
+  } else {
+    button.classList.add("wrong");
   }
   elements.timerValue.textContent = elapsed.toFixed(2);
   elements.resultTitle.textContent = state.correctTrack.trackName;
@@ -1138,9 +1212,11 @@ function nextQuestion() {
     mode: state.currentMode.id,
     modeLabel: state.currentMode.label,
     time: Number(state.totalTime.toFixed(2)),
+    correctCount: state.correctCount,
+    totalQuestions: state.tracks.length,
     date: new Date().toISOString(),
   };
-  saveRanking(entry);
+  if (entry.correctCount === entry.totalQuestions) saveRanking(entry);
   state.lastEntry = entry;
   route("result");
 }
@@ -1154,7 +1230,9 @@ function saveRanking(entry) {
 
 function getRankings(topicId = state.currentTopic?.id, modeId = state.rankingModeId) {
   try {
-    return JSON.parse(localStorage.getItem(rankingKey(topicId, modeId)) || "[]");
+    return JSON.parse(localStorage.getItem(rankingKey(topicId, modeId)) || "[]").filter(
+      (entry) => entry.correctCount === entry.totalQuestions,
+    );
   } catch {
     return [];
   }
@@ -1170,8 +1248,9 @@ function renderResult() {
   const rank = rankings.findIndex((item) => item.date === entry.date) + 1;
   elements.resultTopic.textContent = entry.topic;
   elements.finalTime.textContent = entry.time.toFixed(2);
+  elements.resultMeta.textContent = `${entry.modeLabel} / 正解数 ${entry.correctCount} / ${entry.totalQuestions}`;
   elements.resultRankText.textContent =
-    rank > 0 ? `${entry.topic} / ${entry.modeLabel} の ${rank}位に入りました。` : "ランキングに記録しました。";
+    rank > 0 ? `${entry.topic} / ${entry.modeLabel} の ${rank}位に入りました。` : "全問正解ではないためランキングには記録されません。";
 }
 
 function postResult() {
