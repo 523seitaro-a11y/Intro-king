@@ -151,7 +151,6 @@ const elements = {
   myDataButton: document.querySelector("#myDataButton"),
   profileForm: document.querySelector("#profileForm"),
   profileImageInput: document.querySelector("#profileImageInput"),
-  profileIconInput: document.querySelector("#profileIconInput"),
   profileNameInput: document.querySelector("#profileNameInput"),
   gameTopic: document.querySelector("#gameTopic"),
   questionProgress: document.querySelector("#questionProgress"),
@@ -1523,7 +1522,6 @@ function renderMyData() {
   const playerRecords = targetUser ? records.filter((entry) => entry.player === targetUser) : records;
   const sorted = [...playerRecords].sort((a, b) => a.time - b.time);
   const myTopics = targetUser ? state.topics.filter((topic) => topic.creator === targetUser) : [];
-  elements.profileIconInput.value = state.profileIcon;
   elements.profileNameInput.value = state.player;
   elements.profileSettingsButton.classList.toggle("hidden", !isOwnPage);
   elements.myPageTitle.textContent = targetUser || "ゲスト";
@@ -1574,7 +1572,6 @@ function renderMyData() {
 }
 
 function renderProfileSettings() {
-  elements.profileIconInput.value = state.profileIcon;
   elements.profileNameInput.value = state.player;
   renderAvatar(elements.settingsAvatar, "user-avatar");
 }
@@ -1583,9 +1580,7 @@ function saveProfile() {
   const selectedImage = elements.profileImageInput.files?.[0];
   const previousPlayer = state.player;
   state.player = elements.profileNameInput.value.trim();
-  state.profileIcon = elements.profileIconInput.value.trim();
   localStorage.setItem("introKingPlayer", state.player);
-  localStorage.setItem("introKingProfileIcon", state.profileIcon);
 
   if (!selectedImage) {
     updateMyTopicProfile(previousPlayer);

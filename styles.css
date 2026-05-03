@@ -294,7 +294,7 @@ body.create-mode .topbar {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 2px;
+  gap: 8px;
   grid-template-columns: none;
   max-height: 232px;
   overflow-x: auto;
