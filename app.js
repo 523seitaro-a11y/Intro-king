@@ -776,8 +776,8 @@ async function searchMusicForTopic(event) {
   }
   elements.musicSearchResults.innerHTML = `<div class="empty-state">検索中...</div>`;
   try {
-    const tracks = await searchTracks(query);
-    renderMusicResultList(filterTracksByQuery(tracks, query));
+    const tracks = await searchTopicMusic(query, elements.topicGenreInput.value);
+    renderMusicResultList(tracks);
   } catch (error) {
     console.error(error);
     elements.musicSearchResults.innerHTML = `<div class="empty-state">曲の検索に失敗しました</div>`;
@@ -808,10 +808,9 @@ async function renderMusicSuggestions() {
     elements.musicSearchResults.innerHTML = `<div class="empty-state">お題名を入力すると予測曲が表示されます</div>`;
     return;
   }
-  const query = getSuggestionQuery(topicName, elements.topicGenreInput.value);
   elements.musicSearchResults.innerHTML = `<div class="empty-state">予測曲を読み込み中...</div>`;
   try {
-    const tracks = await searchTracks(query);
+    const tracks = await searchTopicMusic(topicName, elements.topicGenreInput.value);
     renderMusicResultList(tracks.slice(0, 12));
     if (!state.musicSearchCache.length) elements.musicSearchResults.innerHTML = `<div class="empty-state">予測曲が見つかりません</div>`;
   } catch (error) {
@@ -820,13 +819,25 @@ async function renderMusicSuggestions() {
   }
 }
 
-function getSuggestionQuery(topicName, genre) {
-  const genreQueryMap = {
-    アニソン: "アニメ 主題歌 オープニング エンディング",
-    "映画・ドラマ": "映画 ドラマ 主題歌 サウンドトラック",
-    ゲーム音楽: "ゲーム 音楽 サウンドトラック",
-  };
-  return `${topicName} ${genreQueryMap[genre] || `${genre || "J-POP"} 人気 曲`}`.trim();
+async function searchTopicMusic(query, genre) {
+  const searchTerms = getTopicMusicSearchTerms(query, genre);
+  const results = await Promise.all(searchTerms.map((term) => searchTracks(term)));
+  return uniqueTracks(results.flat());
+}
+
+function getTopicMusicSearchTerms(query, genre) {
+  const base = query.trim();
+  if (!base) return [];
+  if (genre === "アニソン") {
+    return [`${base} 主題歌`, `${base} オープニング`, `${base} エンディング`, `${base} OP`, `${base} ED`, `${base} アニメ`];
+  }
+  if (genre === "映画・ドラマ") {
+    return [`${base} 主題歌`, `${base} サウンドトラック`, `${base} soundtrack`, `${base} theme song`, base];
+  }
+  if (genre === "ゲーム音楽") {
+    return [`${base} サウンドトラック`, `${base} 主題歌`, `${base} soundtrack`, `${base} ゲーム 音楽`, base];
+  }
+  return [base];
 }
 
 function renderMusicResultList(tracks = state.musicSearchSource) {
@@ -836,20 +847,6 @@ function renderMusicResultList(tracks = state.musicSearchSource) {
   elements.musicSearchResults.innerHTML = state.musicSearchCache.length
     ? state.musicSearchCache.map(musicResultItem).join("")
     : `<div class="empty-state">追加できる曲がありません</div>`;
-}
-
-function filterTracksByQuery(tracks, query) {
-  const words = query
-    .toLowerCase()
-    .split(/\s+/)
-    .map((word) => word.trim())
-    .filter(Boolean);
-  if (!words.length) return tracks;
-  const matched = tracks.filter((track) => {
-    const haystack = `${track.trackName} ${track.artistName}`.toLowerCase();
-    return words.every((word) => haystack.includes(word));
-  });
-  return matched.length ? matched : tracks;
 }
 
 function musicResultItem(track, index) {
