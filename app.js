@@ -795,7 +795,12 @@ function handleMusicSearchInput() {
 
 async function renderMusicSuggestions() {
   if (elements.musicSearchInput.value.trim()) return;
-  const query = `${elements.topicNameInput.value.trim()} ${elements.topicGenreInput.value || "J-POP"} 人気`.trim();
+  const topicName = elements.topicNameInput.value.trim();
+  if (!topicName) {
+    elements.musicSearchResults.innerHTML = `<div class="empty-state">お題名を入力すると予測曲が表示されます</div>`;
+    return;
+  }
+  const query = getSuggestionQuery(topicName, elements.topicGenreInput.value);
   elements.musicSearchResults.innerHTML = `<div class="empty-state">予測曲を読み込み中...</div>`;
   try {
     const tracks = await searchTracks(query);
@@ -805,6 +810,15 @@ async function renderMusicSuggestions() {
     console.error(error);
     elements.musicSearchResults.innerHTML = `<div class="empty-state">予測曲の取得に失敗しました</div>`;
   }
+}
+
+function getSuggestionQuery(topicName, genre) {
+  const genreQueryMap = {
+    アニソン: "アニメ 主題歌 オープニング エンディング",
+    "映画・ドラマ": "映画 ドラマ 主題歌 サウンドトラック",
+    ゲーム音楽: "ゲーム 音楽 サウンドトラック",
+  };
+  return `${topicName} ${genreQueryMap[genre] || `${genre || "J-POP"} 人気 曲`}`.trim();
 }
 
 function renderMusicResultList(tracks = state.musicSearchSource) {
