@@ -1205,7 +1205,7 @@ function getAvailableTrackCount(topic) {
   return topic.tracks.length;
 }
 
-async function searchTracks(query) {
+function searchTracks(query) {
   const params = new URLSearchParams({
     term: query,
     country: "JP",
@@ -1215,15 +1215,7 @@ async function searchTracks(query) {
     lang: "ja_jp",
   });
 
-  const url = `https://itunes.apple.com/search?${params.toString()}`;
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`iTunes API ${response.status}`);
-    return normalizeSearchResults(await response.json());
-  } catch (error) {
-    console.warn("iTunes fetch failed. Retrying with JSONP:", error);
-    return jsonp(url).then(normalizeSearchResults);
-  }
+  return jsonp(`https://itunes.apple.com/search?${params.toString()}`).then(normalizeSearchResults);
 }
 
 function normalizeSearchResults(data) {
