@@ -613,6 +613,8 @@ function bindEvents() {
   elements.cancelEditButton.addEventListener("click", () => route("home"));
   elements.musicSearchForm.addEventListener("submit", searchMusicForTopic);
   elements.musicSearchInput.addEventListener("input", handleMusicSearchInput);
+  elements.topicNameInput.addEventListener("input", handleTopicSuggestionInput);
+  elements.topicGenreInput.addEventListener("change", handleTopicSuggestionInput);
 
   elements.profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -791,6 +793,12 @@ function handleMusicSearchInput() {
   }
   elements.musicSearchResults.innerHTML = `<div class="empty-state">検索中...</div>`;
   state.musicSearchTimerId = window.setTimeout(() => searchMusicForTopic(), 350);
+}
+
+function handleTopicSuggestionInput() {
+  if (elements.musicSearchInput.value.trim()) return;
+  window.clearTimeout(state.musicSearchTimerId);
+  state.musicSearchTimerId = window.setTimeout(renderMusicSuggestions, 350);
 }
 
 async function renderMusicSuggestions() {

@@ -999,7 +999,12 @@ textarea {
   display: grid;
   grid-template-columns: minmax(300px, 0.9fr) minmax(360px, 1.1fr);
   gap: 18px;
-  height: 100%;
+  position: fixed;
+  top: 62px;
+  right: 12px;
+  bottom: 0;
+  left: 286px;
+  height: auto;
   min-height: 0;
 }
 
@@ -1137,7 +1142,9 @@ textarea {
 
 .topic-image-dialog {
   width: min(860px, calc(100vw - 32px));
-  max-height: min(720px, calc(100vh - 48px));
+  height: min(720px, calc(100vh - 48px));
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 0;
@@ -1150,7 +1157,8 @@ textarea {
 .topic-image-dialog-inner {
   display: grid;
   gap: 14px;
-  max-height: inherit;
+  height: 100%;
+  max-height: none;
   overflow-y: auto;
   padding: 22px;
 }
@@ -1165,8 +1173,7 @@ textarea {
 }
 
 .music-search-panel {
-  position: sticky;
-  top: 18px;
+  position: static;
   grid-template-rows: auto auto minmax(0, 1fr);
   max-height: 100%;
   overflow: hidden;
@@ -1174,8 +1181,7 @@ textarea {
 }
 
 .current-tracks-panel {
-  position: sticky;
-  top: 18px;
+  position: static;
   grid-template-rows: auto minmax(0, 1fr);
   max-height: 100%;
   overflow: hidden;
@@ -1926,6 +1932,7 @@ textarea {
 
   .create-shell,
   .create-main {
+    position: static;
     height: auto;
     overflow: visible;
   }
