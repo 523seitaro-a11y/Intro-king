@@ -1479,7 +1479,7 @@ function renderRanking() {
       (entry, index) => `
         <li>
           <span>#${index + 1}</span>
-          <strong>${escapeHtml(entry.player)} / ${escapeHtml(entry.topic)}</strong>
+          <strong>${escapeHtml(entry.player)}</strong>
           <span>${entry.time.toFixed(2)}秒</span>
         </li>
       `,
