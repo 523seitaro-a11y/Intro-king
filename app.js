@@ -1205,7 +1205,7 @@ function getAvailableTrackCount(topic) {
   return topic.tracks.length;
 }
 
-function searchTracks(query) {
+async function searchTracks(query) {
   const params = new URLSearchParams({
     term: query,
     country: "JP",
@@ -1215,7 +1215,9 @@ function searchTracks(query) {
     lang: "ja_jp",
   });
 
-  return jsonp(`https://itunes.apple.com/search?${params.toString()}`).then(normalizeSearchResults);
+  const response = await fetch(`https://itunes.apple.com/search?${params.toString()}`);
+  if (!response.ok) throw new Error(`iTunes API ${response.status}`);
+  return normalizeSearchResults(await response.json());
 }
 
 function normalizeSearchResults(data) {
