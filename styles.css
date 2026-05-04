@@ -968,8 +968,10 @@ textarea {
 }
 
 .create-shell {
+  height: calc(100vh - 68px);
   max-width: none;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .create-home-button {
@@ -987,6 +989,8 @@ textarea {
   grid-template-columns: minmax(0, 1fr);
   gap: 28px;
   align-items: start;
+  height: 100%;
+  min-height: 0;
   max-width: none;
   padding-left: 260px;
 }
@@ -995,6 +999,8 @@ textarea {
   display: grid;
   grid-template-columns: minmax(300px, 0.9fr) minmax(360px, 1.1fr);
   gap: 18px;
+  height: 100%;
+  min-height: 0;
 }
 
 .topic-detail-panel {
@@ -1162,7 +1168,7 @@ textarea {
   position: sticky;
   top: 18px;
   grid-template-rows: auto auto minmax(0, 1fr);
-  max-height: calc(100vh - 36px);
+  max-height: 100%;
   overflow: hidden;
   align-self: start;
 }
@@ -1171,7 +1177,7 @@ textarea {
   position: sticky;
   top: 18px;
   grid-template-rows: auto minmax(0, 1fr);
-  max-height: calc(100vh - 36px);
+  max-height: 100%;
   overflow: hidden;
   align-self: start;
 }
@@ -1913,7 +1919,15 @@ textarea {
   }
 
   .create-workspace {
+    height: auto;
+    min-height: 0;
     padding-left: 0;
+  }
+
+  .create-shell,
+  .create-main {
+    height: auto;
+    overflow: visible;
   }
 
   .create-home-button {

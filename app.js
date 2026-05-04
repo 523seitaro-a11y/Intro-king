@@ -68,6 +68,7 @@ const state = {
   audio: new Audio(),
   sound: new Audio(),
   countdownTimerId: null,
+  musicSearchTimerId: null,
   supabaseAvailable: true,
   supabaseSyncTimerId: null,
 };
@@ -611,7 +612,7 @@ function bindEvents() {
   elements.topicImageCloseButton.addEventListener("click", () => elements.topicImageDialog.close());
   elements.cancelEditButton.addEventListener("click", () => route("home"));
   elements.musicSearchForm.addEventListener("submit", searchMusicForTopic);
-  elements.musicSearchInput.addEventListener("input", renderMusicSuggestions);
+  elements.musicSearchInput.addEventListener("input", handleMusicSearchInput);
 
   elements.profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -764,7 +765,8 @@ function renderGenreSelect(selectedGenre = "") {
 }
 
 async function searchMusicForTopic(event) {
-  event.preventDefault();
+  event?.preventDefault();
+  window.clearTimeout(state.musicSearchTimerId);
   const query = elements.musicSearchInput.value.trim();
   if (!query) {
     renderMusicSuggestions();
@@ -778,6 +780,17 @@ async function searchMusicForTopic(event) {
     console.error(error);
     elements.musicSearchResults.innerHTML = `<div class="empty-state">曲の検索に失敗しました</div>`;
   }
+}
+
+function handleMusicSearchInput() {
+  window.clearTimeout(state.musicSearchTimerId);
+  const query = elements.musicSearchInput.value.trim();
+  if (!query) {
+    renderMusicSuggestions();
+    return;
+  }
+  elements.musicSearchResults.innerHTML = `<div class="empty-state">検索中...</div>`;
+  state.musicSearchTimerId = window.setTimeout(() => searchMusicForTopic(), 350);
 }
 
 async function renderMusicSuggestions() {
@@ -889,7 +902,7 @@ function topicImageOption(option, selected) {
 
 function getTopicImageOptionGroups() {
   const albumOptions = uniqueTracks(state.draftTracks)
-    .slice(0, 12)
+    .filter((track) => track.artworkUrl100)
     .map((track, index) => ({
       label: `${index + 1}. ${track.trackName}`,
       value: largerArtwork(track.artworkUrl100),
