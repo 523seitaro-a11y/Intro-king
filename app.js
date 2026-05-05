@@ -820,7 +820,24 @@ async function renderMusicSuggestions() {
 }
 
 async function searchTopicMusic(query, genre) {
-  return searchTracks(query.trim());
+  const searchTerms = getTopicMusicSearchTerms(query, genre);
+  const results = await Promise.all(searchTerms.map((term) => searchTracks(term)));
+  return uniqueTracks(results.flat());
+}
+
+function getTopicMusicSearchTerms(query, genre) {
+  const base = query.trim();
+  if (!base) return [];
+  if (genre === "アニソン") {
+    return [`${base} 主題歌`, `${base} オープニング`, `${base} エンディング`, `${base} OP`, `${base} ED`, `${base} アニメ`];
+  }
+  if (genre === "映画・ドラマ") {
+    return [`${base} 主題歌`, `${base} サウンドトラック`, `${base} soundtrack`, `${base} theme song`, base];
+  }
+  if (genre === "ゲーム音楽") {
+    return [`${base} サウンドトラック`, `${base} 主題歌`, `${base} soundtrack`, `${base} ゲーム 音楽`, base];
+  }
+  return [base];
 }
 
 function renderMusicResultList(tracks = state.musicSearchSource) {
