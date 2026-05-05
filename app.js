@@ -18,7 +18,6 @@ const supabaseTables = {
   topics: "intro_topics",
   rankings: "intro_rankings",
 };
-const musicSearchFunctionUrl = `${supabaseConfig.url}/functions/v1/itunes-search`;
 
 const topicGenreOptions = [
   "アニソン",
@@ -1216,12 +1215,7 @@ async function searchTracks(query) {
     lang: "ja_jp",
   });
 
-  const response = await fetch(`${musicSearchFunctionUrl}?${params.toString()}`, {
-    headers: {
-      apikey: supabaseConfig.publishableKey,
-      Authorization: `Bearer ${supabaseConfig.publishableKey}`,
-    },
-  });
+  const response = await fetch(`https://itunes.apple.com/search?${params.toString()}`);
   if (!response.ok) throw new Error(`iTunes API ${response.status}`);
   return normalizeSearchResults(await response.json());
 }
