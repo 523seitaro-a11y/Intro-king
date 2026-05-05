@@ -1216,7 +1216,12 @@ async function searchTracks(query) {
     lang: "ja_jp",
   });
 
-  const response = await fetch(`${musicSearchFunctionUrl}?${params.toString()}`);
+  const response = await fetch(`${musicSearchFunctionUrl}?${params.toString()}`, {
+    headers: {
+      apikey: supabaseConfig.publishableKey,
+      Authorization: `Bearer ${supabaseConfig.publishableKey}`,
+    },
+  });
   if (!response.ok) throw new Error(`iTunes API ${response.status}`);
   return normalizeSearchResults(await response.json());
 }
